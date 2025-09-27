@@ -8,12 +8,13 @@ This project is dedicated to preserving this Flash game so that it's not lost to
 
 ---
 
-## Releases
+## Latest Release
 
 | Version | Release date | Source | Download |
 | --- | --- | --- | --- |
 | **alpha 0.02a** | January 27, 2024 | :label: [tag](../../releases/tag/0.02a) | :package: [Bundle](../../releases/download/0.02a/social-warriors_0.02a.zip) |
-| alpha 0.01a | December 23, 2022 | :label: [tag](../../releases/tag/0.01a) | :ticket: [Launcher](../../releases/download/0.01a/social-warriors_0.01a.exe) ([32-bit](../../releases/download/0.01a/social-warriors_0.01a_32bit.exe)) <br> :package: [Bundle](../../releases/download/0.01a/social-warriors_0.01a.zip) ([32-bit](../../releases/download/0.01a/social-warriors_0.01a_32bit.zip)) |
+
+:information_source: For older versions check [this](RELEASES.md).
 
 ## Reporting Bugs and Contacting
 
@@ -23,8 +24,8 @@ This project is dedicated to preserving this Flash game so that it's not lost to
 
 ## How to Install on Windows
 
-- Download a flash-compatible browser. :flashlight: **Recommended:** Options can be found [here](FLASH.md).
-- Download the latest Bundle version from the [Releases](#releases) section.
+- Download a flash-compatible browser. :flashlight: **Recommended:** [FlashBrowser](https://github.com/radubirsan/FlashBrowser/releases/latest). Alternatives can be found [here](FLASH.md).
+- Download the latest Bundle version from the [Latest Release](#latest-release) section.
 - Extract the downloaded zip file to a suitable location.
 
 ## How to Play
