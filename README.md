@@ -12,9 +12,27 @@ This project is dedicated to preserving this Flash game so that it's not lost to
 
 | Version | Release date | Source | Download |
 | --- | --- | --- | --- |
-| **alpha 0.02a** | January 27, 2024 | :label: [tag](../../releases/tag/0.02a) | :package: [Bundle](../../releases/download/0.02a/social-warriors_0.02a.zip) |
+| **alpha 0.03a** | December 14, 2025 | :label: [tag](../../releases/tag/0.03a) | :package: [Bundle](../../releases/download/0.03a/social-warriors_0.03a.zip) |
 
 :information_source: For older versions check [this](RELEASES.md).
+
+## Recent Enhancements
+
+### Game Progression Improvements
+- **Enhanced Skip Timer Functionality**: Fixed issues with chapter timer skipping and added a new "Force Next Mission" feature for reliable mission progression
+- **Mission Collection Robustness**: Improved the `collect_mission` command to handle edge cases and forced collections properly
+
+### Resource Management API
+- **Expanded Control Panel**: Added new API endpoints for more granular resource management
+- **Consistent API Design**: Following established patterns for resource update endpoints
+
+### UI/UX Enhancements
+- **Visual Resource Icons**: Replaced generic colored circles with proper resource icons (gold, wood, steel, oil, cash) in the Resources Control Panel
+- **Improved User Feedback**: Enhanced messaging and response details for all API operations
+
+### Codebase Optimization
+- **Temporary File Cleanup**: Removed unnecessary cache files and temporary directories
+- **Code Refactoring**: Improved session synchronization and data consistency between save files and memory
 
 ## Reporting Bugs and Contacting
 
@@ -43,7 +61,7 @@ This project is dedicated to preserving this Flash game so that it's not lost to
 
 ## On archives and accessibility to digital heritage
 
-- [Exemption to PCCPSACT](https://www.federalregister.gov/documents/2018/10/26/2018-23241/exemption-to-prohibition-on-circumvention-of-copyright-protection-systems-for-access-control), exemptions to the provision of the Digital Millennium Copyright Act (“DMCA”). 
+- [Exemption to PCCPSACT](https://www.federalregister.gov/documents/2018/10/26/2018-23241/exemption-to-prohibition-on-circumvention-of-copyright-protection-systems-for-access-control), exemptions to the provision of the Digital Millennium Copyright Act ("DMCA"). 
 - [EFGAMP](https://efgamp.eu/), the European Federation of Video Game Archives, Museums and Preservation projects.
 - [UNESCO PERSIST Programme](https://unescopersist.org/), helps ensure that digital information can continue to be accessed in the future.
 - [The Internet Archive](https://archive.org/), a digital library of Internet sites and other cultural artifacts in digital form.
