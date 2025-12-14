@@ -1,56 +1,123 @@
+#!/usr/bin/env python3
+"""
+Unit Patch Generator Script
+
+This script creates unit patches from CSV data:
+- Reads unit data from CSV file
+- Uses templates from unit_templates.json
+- Generates JSON patches to add new units to the game
+- Outputs patches to unit_patch.json
+- Creates a storage file with unit IDs for save games
+"""
+
 import os
 import json
+import csv
+import argparse
+import logging
+import sys
 import copy
 
-# CONFIG
-patch_filename = "../config/patch/unit_patch.json"
-output_storage = "unit_patch_storage.json" # drop in save to add all patched units to storage
-input_csv = "sw_unit_patch.csv"
+# Add the tools directory to the path so we can import our modules
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# DO THE THING
-templates = json.load(open("unit_templates.json", 'r', encoding='utf-8'))
+import config
+import utils
+import validators
 
-lines = []
-patch = []
-storage = {}
-if os.path.exists(input_csv):
-    with open(input_csv, "r") as f:
-        lines = f.readlines()
-        f.close()
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-def trimquotes(inputstr: str):
-    new = inputstr
-    while not new.startswith("{"):
-        new = inputstr[1:]
-    while not new.endswith("}"):
-        new = new [:-1]
-    return new
+def load_templates():
+    """
+    Load unit templates from JSON file.
+    
+    Returns:
+        dict: Unit templates
+        
+    Raises:
+        Exception: If templates cannot be loaded or validated
+    """
+    try:
+        templates = utils.load_json_file(config.UNIT_TEMPLATES_PATH)
+        logger.info(f"Loaded templates from {config.UNIT_TEMPLATES_PATH}")
+        
+        # Validate each template
+        for template_name, template in templates.items():
+            validators.validate_template(template, template_name)
+            
+        return templates
+    except Exception as e:
+        logger.error(f"Failed to load templates: {str(e)}")
+        raise
 
-for line in lines:
-    col = line.split("\t")
+def load_csv_data():
+    """
+    Load unit data from CSV file.
+    
+    Returns:
+        list: List of dictionaries representing unit data
+    """
+    units = []
+    
+    if not os.path.exists(config.INPUT_CSV_PATH):
+        logger.warning(f"CSV file {config.INPUT_CSV_PATH} not found")
+        return units
+    
+    try:
+        with open(config.INPUT_CSV_PATH, "r", encoding='utf-8') as f:
+            # Use DictReader for better readability
+            reader = csv.DictReader(f, delimiter='\t')
+            for row_num, row in enumerate(reader, start=1):
+                try:
+                    # Validate the row data
+                    validators.validate_unit_data(row)
+                    units.append(row)
+                    logger.debug(f"Loaded unit data for {row['name']} from row {row_num}")
+                except ValueError as e:
+                    logger.warning(f"Skipping row {row_num} due to validation error: {str(e)}")
+                    continue
+                    
+        logger.info(f"Loaded {len(units)} units from {config.INPUT_CSV_PATH}")
+        return units
+    except Exception as e:
+        logger.error(f"Failed to load CSV data: {str(e)}")
+        raise
 
-    ITEM_ID = col[0]
-    ITEM_ASSET = col[1]
-    ITEM_NAME = col[2]
-    ITEM_HEALTH = col[3]
-    ITEM_ATTACK = col[4]
-    ITEM_RANGE = col[5]
-    ITEM_SPEED = col[6]
-    ITEM_INTERVAL = col[7]
-    ITEM_POPULATION = col[8]
-    ITEM_SYRINGES = col[9]
-    ITEM_XP = col[10]
-    ITEM_COST = trimquotes(col[11])
-    ITEM_GROUP = col[12]
-    ITEM_PROPERTIES = trimquotes(col[13])
-
+def create_unit_patch(unit_data, templates):
+    """
+    Create a patch for a single unit.
+    
+    Args:
+        unit_data (dict): Unit data from CSV
+        templates (dict): Unit templates
+        
+    Returns:
+        tuple: (patch_operation, storage_entry) or (None, None) if failed
+    """
+    ITEM_ID = unit_data['id']
+    ITEM_ASSET = unit_data['asset']
+    ITEM_NAME = unit_data['name']
+    ITEM_HEALTH = unit_data['health']
+    ITEM_ATTACK = unit_data['attack']
+    ITEM_RANGE = unit_data['range']
+    ITEM_SPEED = unit_data['speed']
+    ITEM_INTERVAL = unit_data['interval']
+    ITEM_POPULATION = unit_data['population']
+    ITEM_SYRINGES = unit_data['syringes']
+    ITEM_XP = unit_data['xp']
+    ITEM_COST = utils.trim_quotes(unit_data['cost'])
+    ITEM_GROUP = unit_data['group']
+    ITEM_PROPERTIES = utils.trim_quotes(unit_data['properties'])
+    
     if ITEM_ASSET == "":
-        print(f"{ITEM_NAME} Failed - Asset missing")
-        continue
+        logger.warning(f"{ITEM_NAME} Failed - Asset missing")
+        return None, None
 
     if ITEM_GROUP not in templates:
-        print(f"{ITEM_NAME} Failed - Template {ITEM_GROUP} not found")
-        continue
+        logger.warning(f"{ITEM_NAME} Failed - Template {ITEM_GROUP} not found")
+        return None, None
 
     # Fetch from template
     template = templates[ITEM_GROUP]
@@ -68,27 +135,106 @@ for line in lines:
     item["population"] = str(ITEM_POPULATION)
     item["syringes"] = str(ITEM_SYRINGES)
     item["xp"] = str(ITEM_XP)
-    item["costs"] = ITEM_COST.replace("\\","")
-    item["properties"] = ITEM_PROPERTIES.replace("\\","")
+    item["costs"] = ITEM_COST.replace("\\", "")
+    item["properties"] = ITEM_PROPERTIES.replace("\\", "")
 
     # Create patch
-    p = {}
-    p["op"] = "add"
-    p["path"] = "/items/-"
-    p["value"] = item
+    patch = {
+        "op": "add",
+        "path": "/items/-",
+        "value": item
+    }
 
-    # Append to patch
-    patch.append(p)
-    # Append to storage
-    storage[str(ITEM_ID)] = 1
+    # Storage entry (unit ID -> quantity)
+    storage_entry = {str(ITEM_ID): 1}
 
-    print(f"Made patch for {ITEM_NAME}")
+    logger.info(f"Made patch for {ITEM_NAME}")
+    return patch, storage_entry
 
-if len(patch) > 0:
-    with open(patch_filename, 'w') as f:
-        json.dump(patch, f)
-    with open(output_storage, 'w') as f:
-        json.dump(storage, f)
-        print(f"Created patch for {len(patch)} items to {patch_filename}!")
-else:
-    print("Patch creation failed!")
+def generate_patches(units, templates):
+    """
+    Generate patches for all units.
+    
+    Args:
+        units (list): List of unit data dictionaries
+        templates (dict): Unit templates
+        
+    Returns:
+        tuple: (patches, storage) - lists of patch operations and storage entries
+    """
+    patches = []
+    storage = {}
+    
+    for unit in units:
+        patch, storage_entry = create_unit_patch(unit, templates)
+        if patch and storage_entry:
+            patches.append(patch)
+            storage.update(storage_entry)
+    
+    return patches, storage
+
+def save_results(patches, storage):
+    """
+    Save the generated patches and storage data.
+    
+    Args:
+        patches (list): List of patch operations
+        storage (dict): Storage data
+    """
+    if not patches:
+        logger.warning("No patches to save")
+        return
+    
+    try:
+        # Save patches
+        utils.save_json_file(config.UNIT_PATCH_PATH, patches)
+        
+        # Save storage
+        utils.save_json_file(config.OUTPUT_STORAGE_PATH, storage)
+        
+        logger.info(f"Created patch for {len(patches)} items to {config.UNIT_PATCH_PATH}!")
+    except Exception as e:
+        logger.error(f"Failed to save results: {str(e)}")
+        raise
+
+def main():
+    """Main function to run the unit patch generator."""
+    parser = argparse.ArgumentParser(description='Generate unit patches from CSV data')
+    parser.add_argument('--csv', default=config.INPUT_CSV_PATH, 
+                       help='Input CSV file path')
+    parser.add_argument('--templates', default=config.UNIT_TEMPLATES_PATH, 
+                       help='Unit templates file path')
+    parser.add_argument('--patch-output', default=config.UNIT_PATCH_PATH, 
+                       help='Output patch file path')
+    parser.add_argument('--storage-output', default=config.OUTPUT_STORAGE_PATH, 
+                       help='Output storage file path')
+    parser.add_argument('--verbose', '-v', action='store_true', 
+                       help='Enable verbose logging')
+    
+    args = parser.parse_args()
+    
+    # Adjust logging level based on verbosity
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    try:
+        # Load templates
+        templates = load_templates()
+        
+        # Load CSV data
+        units = load_csv_data()
+        
+        # Generate patches
+        patches, storage = generate_patches(units, templates)
+        
+        # Save results
+        save_results(patches, storage)
+        
+        logger.info(f"Successfully generated {len(patches)} patch operations")
+        
+    except Exception as e:
+        logger.error(f"Failed to generate patches: {str(e)}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
