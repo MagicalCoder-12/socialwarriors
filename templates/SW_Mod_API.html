@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Social Wars Resources API</title>
+        <style>
+            body { font-family: Arial; background:#1b1b1b; color:#fff; text-align:center; padding:40px; }
+            .card { background:#2c2c2c; padding:20px; border-radius:10px; width:300px; margin:auto; margin-bottom: 20px; }
+            input { width:80%; padding:8px; margin:10px 0; border:none; border-radius:5px; }
+            button { padding:10px 20px; background:#28a745; color:#fff; border:none; border-radius:5px; cursor:pointer; }
+            button:hover { background:#218838; }
+            .resource-icon {
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+                border-radius: 50%;
+                margin-right: 5px;
+                vertical-align: middle;
+            }
+            .oil-icon { background: #000000; }
+            .wood-icon { background: #8B4513; }
+            .steel-icon { background: #808080; }
+            .gold-icon { background: #FFD700; }
+        </style>
+    </head>
+    <body>
+        <h2><img src="templates/img/logo.png" alt="Social-Wars-logo" style="width: 20vw;"></h2>
+        <h2><img src="templates/img/cash.png" alt="cash"> Resources API <img src="templates/img/cash.png" alt="cash"></h2>
+        
+        <div class="card">
+            <p id="player" align="left" style="padding-left: 20px;">
+                <img src="templates/img/icon.png" alt="icon" style="width: 20px;">Current Player: ...</p>
+            <p id="cash" align="left" style="padding-left: 20px;">
+                <img src="templates/img/cash.png" alt="cash" style="width: 20px;">Cash: ...</p>
+            <input id="newCash" type="number" placeholder="Enter new cash value">
+            <button onclick="setCash()">Apply</button>
+        </div>
+        
+        <div class="card">
+            <p id="oil" align="left" style="padding-left: 20px;">
+                <span class="resource-icon oil-icon"></span>Oil: ...</p>
+            <input id="newOil" type="number" placeholder="Enter new oil value">
+            <button onclick="setOil()">Apply</button>
+        </div>
+        
+        <div class="card">
+            <p id="wood" align="left" style="padding-left: 20px;">
+                <span class="resource-icon wood-icon"></span>Wood: ...</p>
+            <input id="newWood" type="number" placeholder="Enter new wood value">
+            <button onclick="setWood()">Apply</button>
+        </div>
+        
+        <div class="card">
+            <p id="steel" align="left" style="padding-left: 20px;">
+                <span class="resource-icon steel-icon"></span>Steel: ...</p>
+            <input id="newSteel" type="number" placeholder="Enter new steel value">
+            <button onclick="setSteel()">Apply</button>
+        </div>
+        
+        <div class="card">
+            <p id="gold" align="left" style="padding-left: 20px;">
+                <span class="resource-icon gold-icon"></span>Gold: ...</p>
+            <input id="newGold" type="number" placeholder="Enter new gold value">
+            <button onclick="setGold()">Apply</button>
+        </div>
+        
+        <p id="msg"></p>
+
+        <script>
+        async function loadData() {
+            const res = await fetch('/api/cash');
+            if (!res.ok) return;
+            const data = await res.json();
+            document.getElementById('player').textContent = 'Player: ' + data.player;
+            document.getElementById('cash').textContent = 'Cash: ' + data.cash;
+            
+            // Load other resources
+            const oilRes = await fetch('/api/oil');
+            if (oilRes.ok) {
+                const oilData = await oilRes.json();
+                document.getElementById('oil').textContent = 'Oil: ' + oilData.oil;
+            }
+            
+            const woodRes = await fetch('/api/wood');
+            if (woodRes.ok) {
+                const woodData = await woodRes.json();
+                document.getElementById('wood').textContent = 'Wood: ' + woodData.wood;
+            }
+            
+            const steelRes = await fetch('/api/steel');
+            if (steelRes.ok) {
+                const steelData = await steelRes.json();
+                document.getElementById('steel').textContent = 'Steel: ' + steelData.steel;
+            }
+            
+            const goldRes = await fetch('/api/gold');
+            if (goldRes.ok) {
+                const goldData = await goldRes.json();
+                document.getElementById('gold').textContent = 'Gold: ' + goldData.gold;
+            }
+        }
+
+        async function setCash() {
+            const val = document.getElementById('newCash').value;
+            const res = await fetch('/api/set_cash', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: Number(val) })
+            });
+            const data = await res.json();
+            document.getElementById('msg').textContent = data.message || 'Done.';
+            loadData();
+        }
+        
+        async function setOil() {
+            const val = document.getElementById('newOil').value;
+            const res = await fetch('/api/set_oil', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: Number(val) })
+            });
+            const data = await res.json();
+            document.getElementById('msg').textContent = data.message || 'Done.';
+            loadData();
+        }
+        
+        async function setWood() {
+            const val = document.getElementById('newWood').value;
+            const res = await fetch('/api/set_wood', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: Number(val) })
+            });
+            const data = await res.json();
+            document.getElementById('msg').textContent = data.message || 'Done.';
+            loadData();
+        }
+        
+        async function setSteel() {
+            const val = document.getElementById('newSteel').value;
+            const res = await fetch('/api/set_steel', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: Number(val) })
+            });
+            const data = await res.json();
+            document.getElementById('msg').textContent = data.message || 'Done.';
+            loadData();
+        }
+        
+        async function setGold() {
+            const val = document.getElementById('newGold').value;
+            const res = await fetch('/api/set_gold', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: Number(val) })
+            });
+            const data = await res.json();
+            document.getElementById('msg').textContent = data.message || 'Done.';
+            loadData();
+        }
+
+        loadData();
+        </script>
+    </body>
+    </html>

@@ -234,7 +234,9 @@ def set_cash():
         user_id = data["playerInfo"]["pid"]
         # Update the in-memory session data
         if user_id in sessions.__saves:
-            sessions.__saves[user_id]["playerInfo"]["cash"] = new_amount
+            # Update all player info, not just cash
+            for key, value in data["playerInfo"].items():
+                sessions.__saves[user_id]["playerInfo"][key] = value
             # Save the session to disk as well to persist changes
             sessions.save_session(user_id)
 
@@ -246,17 +248,184 @@ def set_cash():
         "message": f"Cash updated successfully for {ACTIVE_PLAYER}. Changes applied in real-time."
     })
 
+# API endpoints for resource modification
+@app.route("/api/oil", methods=["GET"])
+def get_oil():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    oil = data["maps"][0].get("oil", 0)
+    return jsonify({"player": ACTIVE_PLAYER, "oil": oil})
+
+@app.route("/api/set_oil", methods=["POST"])
+def set_oil():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0].get("oil", 0)
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["oil"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["oil"] = new_amount
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_oil": old_amount,
+        "new_oil": new_amount,
+        "message": f"Oil updated successfully for {ACTIVE_PLAYER}. Changes applied in real-time."
+    })
+
+@app.route("/api/wood", methods=["GET"])
+def get_wood():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    wood = data["maps"][0].get("wood", 0)
+    return jsonify({"player": ACTIVE_PLAYER, "wood": wood})
+
+@app.route("/api/set_wood", methods=["POST"])
+def set_wood():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0].get("wood", 0)
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["wood"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["wood"] = new_amount
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_wood": old_amount,
+        "new_wood": new_amount,
+        "message": f"Wood updated successfully for {ACTIVE_PLAYER}. Changes applied in real-time."
+    })
+
+@app.route("/api/steel", methods=["GET"])
+def get_steel():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    steel = data["maps"][0].get("steel", 0)
+    return jsonify({"player": ACTIVE_PLAYER, "steel": steel})
+
+@app.route("/api/set_steel", methods=["POST"])
+def set_steel():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0].get("steel", 0)
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["steel"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["steel"] = new_amount
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_steel": old_amount,
+        "new_steel": new_amount,
+        "message": f"Steel updated successfully for {ACTIVE_PLAYER}. Changes applied in real-time."
+    })
+
+@app.route("/api/gold", methods=["GET"])
+def get_gold():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    gold = data["maps"][0].get("gold", 0)
+    return jsonify({"player": ACTIVE_PLAYER, "gold": gold})
+
+@app.route("/api/set_gold", methods=["POST"])
+def set_gold():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0].get("gold", 0)
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["gold"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["gold"] = new_amount
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_gold": old_amount,
+        "new_gold": new_amount,
+        "message": f"Gold updated successfully for {ACTIVE_PLAYER}. Changes applied in real-time."
+    })
+
 @app.route("/control")
 def control_panel():
-    return render_template("SWCRAPI_test.html")
+    return render_template("SW_Mod_API.html")
 
 @app.route('/templates/img/<path:filename>')
 def serve_template_images(filename):
     return send_from_directory('templates/img', filename)
 
-@app.route('/settings')
-def settings_page():
-    return render_template('settings.html')
+
 
 ## GAME STATIC
 
@@ -322,6 +491,9 @@ def get_player_info_response():
             if save_user_id == USERID:
                 # Update the cash value in the response with the latest value
                 player_info["playerInfo"]["cash"] = save_data["playerInfo"]["cash"]
+                # Also update other player info that might have changed
+                for key, value in save_data["playerInfo"].items():
+                    player_info["playerInfo"][key] = value
         
         return (player_info, 200)
     # General Mike
