@@ -1,0 +1,17 @@
+[
+	{
+		"op": "replace",
+		"path": "/items/0/population",
+		"value": "30"
+	},
+	{
+		"op": "replace",
+		"path": "/items/46/population",
+		"value": "50"
+	},
+	{
+		"op": "replace",
+		"path": "/items/47/population",
+		"value": "100"
+	}
+]

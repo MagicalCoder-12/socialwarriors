@@ -9,4 +9,11 @@ no_hiring_needed
 # This mod skips chapter timers, allowing instant progression through chapters
 skip_chapter_timers
 
+# This mod increases population limits for houses
+increased_population
+
+# This mod was removed because it was incorrectly trying to modify the main config
+# Instead, the initial.json file has been modified directly
+# village_population_increase
+
 
