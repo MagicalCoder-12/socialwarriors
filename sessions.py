@@ -3,11 +3,7 @@ import os
 import copy
 import uuid
 import random
-import threading
 from flask import session
-
-# Create a lock for thread-safe file operations
-file_lock = threading.Lock()
 
 from version import version_code
 from engine import timestamp_now
@@ -254,8 +250,6 @@ def save_session(USERID: str):
     file = f"{USERID}.save.json"
     print(f" * Saving village at {file}... ", end='')
     village = session(USERID)
-    # Use thread lock to prevent race conditions
-    with file_lock:
-        with open(os.path.join(SAVES_DIR, file), 'w') as f:
-            json.dump(village, f, indent=4)
+    with open(os.path.join(SAVES_DIR, file), 'w') as f:
+        json.dump(village, f, indent=4)
     print("Done.")

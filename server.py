@@ -9,9 +9,6 @@ import time
 import shutil
 import threading
 
-# Add threading lock for file operations
-file_lock = threading.Lock()
-
 if os.name == 'nt':
     os.system("color")
     os.system("title Social Wars Server")
@@ -84,16 +81,12 @@ def backup_save(file_path):
     shutil.copy2(file_path, os.path.join(BACKUP_DIR, f"{ts}_{name}"))
 
 def read_save(file_path):
-    """Thread-safe read of save file."""
-    with file_lock:
-        with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
+    with open(file_path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 def write_save(file_path, data):
-    """Thread-safe write of save file."""
-    with file_lock:
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
 
 def auto_detect_thread():
     """Continuously monitor for new saves every few seconds."""
@@ -226,36 +219,27 @@ def set_cash():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["playerInfo"]["cash"]
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["playerInfo"]["cash"] = new_amount
+    write_save(ACTIVE_SAVE, data)
     
-    # Validate and convert amount to integer
-    try:
-        new_amount = int(payload["amount"])
-        if new_amount < 0:
-            return jsonify({"error": "Amount must be a positive value"}), 400
-    except (ValueError, TypeError):
-        return jsonify({"error": "Invalid amount value"}), 400
-    
-    # Use file lock to prevent race conditions
-    with file_lock:
-        data = read_save(ACTIVE_SAVE)
-        old_amount = data["playerInfo"]["cash"]
-        
-        # Backup and write
-        backup_save(ACTIVE_SAVE)
-        data["playerInfo"]["cash"] = new_amount
-        write_save(ACTIVE_SAVE, data)
-        
-        # Also update the session data to reflect changes in real-time
-        if ACTIVE_PLAYER:
-            user_id = data["playerInfo"]["pid"]
-            # Update the in-memory session data
-            if user_id in sessions.__saves:
-                # Update all player info, not just cash
-                for key, value in data["playerInfo"].items():
-                    sessions.__saves[user_id]["playerInfo"][key] = value
-                # Save the session to disk as well to persist changes
-                sessions.save_session(user_id)
-    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            # Update all player info, not just cash
+            for key, value in data["playerInfo"].items():
+                sessions.__saves[user_id]["playerInfo"][key] = value
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -280,34 +264,25 @@ def set_oil():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0].get("oil", 0)
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["oil"] = new_amount
+    write_save(ACTIVE_SAVE, data)
     
-    # Validate and convert amount to integer
-    try:
-        new_amount = int(payload["amount"])
-        if new_amount < 0:
-            return jsonify({"error": "Amount must be a positive value"}), 400
-    except (ValueError, TypeError):
-        return jsonify({"error": "Invalid amount value"}), 400
-    
-    # Use file lock to prevent race conditions
-    with file_lock:
-        data = read_save(ACTIVE_SAVE)
-        old_amount = data["maps"][0].get("oil", 0)
-        
-        # Backup and write
-        backup_save(ACTIVE_SAVE)
-        data["maps"][0]["oil"] = new_amount
-        write_save(ACTIVE_SAVE, data)
-        
-        # Also update the session data to reflect changes in real-time
-        if ACTIVE_PLAYER:
-            user_id = data["playerInfo"]["pid"]
-            # Update the in-memory session data
-            if user_id in sessions.__saves:
-                sessions.__saves[user_id]["maps"][0]["oil"] = new_amount
-                # Save the session to disk as well to persist changes
-                sessions.save_session(user_id)
-    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["oil"] = new_amount
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -331,34 +306,25 @@ def set_wood():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0].get("wood", 0)
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["wood"] = new_amount
+    write_save(ACTIVE_SAVE, data)
     
-    # Validate and convert amount to integer
-    try:
-        new_amount = int(payload["amount"])
-        if new_amount < 0:
-            return jsonify({"error": "Amount must be a positive value"}), 400
-    except (ValueError, TypeError):
-        return jsonify({"error": "Invalid amount value"}), 400
-    
-    # Use file lock to prevent race conditions
-    with file_lock:
-        data = read_save(ACTIVE_SAVE)
-        old_amount = data["maps"][0].get("wood", 0)
-        
-        # Backup and write
-        backup_save(ACTIVE_SAVE)
-        data["maps"][0]["wood"] = new_amount
-        write_save(ACTIVE_SAVE, data)
-        
-        # Also update the session data to reflect changes in real-time
-        if ACTIVE_PLAYER:
-            user_id = data["playerInfo"]["pid"]
-            # Update the in-memory session data
-            if user_id in sessions.__saves:
-                sessions.__saves[user_id]["maps"][0]["wood"] = new_amount
-                # Save the session to disk as well to persist changes
-                sessions.save_session(user_id)
-    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["wood"] = new_amount
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -382,34 +348,25 @@ def set_steel():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0].get("steel", 0)
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["steel"] = new_amount
+    write_save(ACTIVE_SAVE, data)
     
-    # Validate and convert amount to integer
-    try:
-        new_amount = int(payload["amount"])
-        if new_amount < 0:
-            return jsonify({"error": "Amount must be a positive value"}), 400
-    except (ValueError, TypeError):
-        return jsonify({"error": "Invalid amount value"}), 400
-    
-    # Use file lock to prevent race conditions
-    with file_lock:
-        data = read_save(ACTIVE_SAVE)
-        old_amount = data["maps"][0].get("steel", 0)
-        
-        # Backup and write
-        backup_save(ACTIVE_SAVE)
-        data["maps"][0]["steel"] = new_amount
-        write_save(ACTIVE_SAVE, data)
-        
-        # Also update the session data to reflect changes in real-time
-        if ACTIVE_PLAYER:
-            user_id = data["playerInfo"]["pid"]
-            # Update the in-memory session data
-            if user_id in sessions.__saves:
-                sessions.__saves[user_id]["maps"][0]["steel"] = new_amount
-                # Save the session to disk as well to persist changes
-                sessions.save_session(user_id)
-    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["steel"] = new_amount
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -433,34 +390,25 @@ def set_gold():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0].get("gold", 0)
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["gold"] = new_amount
+    write_save(ACTIVE_SAVE, data)
     
-    # Validate and convert amount to integer
-    try:
-        new_amount = int(payload["amount"])
-        if new_amount < 0:
-            return jsonify({"error": "Amount must be a positive value"}), 400
-    except (ValueError, TypeError):
-        return jsonify({"error": "Invalid amount value"}), 400
-    
-    # Use file lock to prevent race conditions
-    with file_lock:
-        data = read_save(ACTIVE_SAVE)
-        old_amount = data["maps"][0].get("gold", 0)
-        
-        # Backup and write
-        backup_save(ACTIVE_SAVE)
-        data["maps"][0]["gold"] = new_amount
-        write_save(ACTIVE_SAVE, data)
-        
-        # Also update the session data to reflect changes in real-time
-        if ACTIVE_PLAYER:
-            user_id = data["playerInfo"]["pid"]
-            # Update the in-memory session data
-            if user_id in sessions.__saves:
-                sessions.__saves[user_id]["maps"][0]["gold"] = new_amount
-                # Save the session to disk as well to persist changes
-                sessions.save_session(user_id)
-    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["gold"] = new_amount
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -486,10 +434,6 @@ def serve_fusion_units():
 
 @app.route(__STATIC_ROOT + "/<path:path>")
 def static_assets_loader(path):
-    # Ensure the path doesn't try to traverse outside the assets directory
-    if ".." in path or path.startswith("/"):
-        return ("Forbidden", 403)
-    
     # LITE-WEIGHT BUILD: ASSETS FROM GITHUB
     if False:
         cdn = "https://raw.githubusercontent.com/AcidCaos/socialwarriors/main/assets/"
@@ -501,11 +445,7 @@ def static_assets_loader(path):
         m.seek(0)
         return send_file(m, download_name=path.split("/")[-1:][0])
     # OFFLINE BUILD
-    try:
-        return send_from_directory(ASSETS_DIR, path)
-    except FileNotFoundError:
-        print(f"[WARNING] Asset not found: {path}")
-        return ("Asset not found", 404)
+    return send_from_directory(ASSETS_DIR, path)
 
 ## GAME DYNAMIC
 
@@ -764,26 +704,24 @@ def skip_chapter_timer():
     if not ACTIVE_SAVE:
         return jsonify({"error": "No active save detected"}), 404
     
-    # Use file lock to prevent race conditions
-    with file_lock:
-        # Load the current save
-        data = read_save(ACTIVE_SAVE)
-        
-        # Set the last chapter timestamp to 0 to skip the timer
-        data["maps"][0]["timestampLastChapter"] = 0
-        
-        # Backup and write the updated save
-        backup_save(ACTIVE_SAVE)
-        write_save(ACTIVE_SAVE, data)
-        
-        # Also update the session data to reflect changes in real-time
-        if ACTIVE_PLAYER:
-            user_id = data["playerInfo"]["pid"]
-            # Update the in-memory session data
-            if user_id in sessions.__saves:
-                sessions.__saves[user_id]["maps"][0]["timestampLastChapter"] = 0
-                # Save the session to disk as well to persist changes
-                sessions.save_session(user_id)
+    # Load the current save
+    data = read_save(ACTIVE_SAVE)
+    
+    # Set the last chapter timestamp to 0 to skip the timer
+    data["maps"][0]["timestampLastChapter"] = 0
+    
+    # Backup and write the updated save
+    backup_save(ACTIVE_SAVE)
+    write_save(ACTIVE_SAVE, data)
+    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["timestampLastChapter"] = 0
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
     
     return jsonify({
         "success": True,
@@ -799,17 +737,4 @@ print (" [+] Running server...")
 
 if __name__ == '__main__':
     app.secret_key = 'SECRET_KEY'
-    # Clear any buffered output and ensure our messages are visible
-    import sys
-    print("=" * 60)
-    print(f" [+] SERVER READY! Access the game at: http://{host}:{port}/")
-    print(" [+] Make sure to use a Flash-enabled browser to play")
-    print("=" * 60)
-    sys.stdout.flush()  # Force output to be displayed immediately
-    
-    try:
-        app.run(host=host, port=port, debug=False)
-    except Exception as e:
-        print(f" [!] Server failed to start: {e}")
-        print(" [!] Please check if port 5055 is already in use")
-        sys.exit(1)
+    app.run(host=host, port=port, debug=False)

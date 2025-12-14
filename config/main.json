@@ -47604,7 +47604,7 @@
         ],
         "URL_APP_PROD": "http:\/\/apps.facebook.com\/socialwarsgame\/",
         "REACTIVATE_WONDER_DISCOUNT": 0.5,
-        "MAX_POPULATION_CAP": 175,
+        "MAX_POPULATION_CAP": 4000,
         "REWARDS_CHAPTERS": [
             {},
             {
