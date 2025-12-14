@@ -436,11 +436,25 @@ def do_command(USERID, map_id, cmd, args, resources_changed):
             next_mission = 1
 
         map["idCurrentMission"] = str(next_mission)
-        map["timestampLastChapter"] = time_now
+        # Check if skip chapter timer mod is enabled
+        skip_timer = False
+        # Look for the global flag to skip chapter timers
+        from get_game_config import get_game_config
+        config = get_game_config()
+        if "globals" in config and "chapter_timer_skip_enabled" in config["globals"]:
+            skip_timer = config["globals"]["chapter_timer_skip_enabled"]
+        
+        # Only set timestamp if not skipping timers
+        if not skip_timer:
+            map["timestampLastChapter"] = time_now
+        else:
+            # Set timestamp to 0 to skip timer
+            map["timestampLastChapter"] = 0
         map["currentQuestVars"] = {}
 
         print("Advanced to mission", str(next_mission))
-
+        if skip_timer:
+            print("Chapter timer skipped due to mod")
     elif cmd == "win_daily_bonus":
         item = args[0]
         next_id = args[1] + 1

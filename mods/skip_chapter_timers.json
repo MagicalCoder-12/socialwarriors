@@ -1,0 +1,7 @@
+[
+	{
+		"op": "add",
+		"path": "/globals/chapter_timer_skip_enabled",
+		"value": true
+	}
+]

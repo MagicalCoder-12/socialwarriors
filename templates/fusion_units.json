@@ -1,0 +1,1206 @@
+[
+  {
+    "id": "1002",
+    "name": "Red Tank"
+  },
+  {
+    "id": "1003",
+    "name": "Tank II"
+  },
+  {
+    "id": "1004",
+    "name": "Tank III"
+  },
+  {
+    "id": "1006",
+    "name": "Killer Bazooka Jeep"
+  },
+  {
+    "id": "1007",
+    "name": "Soldier"
+  },
+  {
+    "id": "1008",
+    "name": "Bazooka"
+  },
+  {
+    "id": "1010",
+    "name": "APC"
+  },
+  {
+    "id": "1014",
+    "name": "Machine Gun Jeep"
+  },
+  {
+    "id": "1015",
+    "name": "Aircraft"
+  },
+  {
+    "id": "1016",
+    "name": "Tank"
+  },
+  {
+    "id": "1020",
+    "name": "Soldier II"
+  },
+  {
+    "id": "1021",
+    "name": "Soldier III"
+  },
+  {
+    "id": "1022",
+    "name": "Bazooka II"
+  },
+  {
+    "id": "1023",
+    "name": "Bazooka III"
+  },
+  {
+    "id": "1025",
+    "name": "Aircraft II"
+  },
+  {
+    "id": "1026",
+    "name": "Aircraft III"
+  },
+  {
+    "id": "1027",
+    "name": "Helicopter"
+  },
+  {
+    "id": "1028",
+    "name": "Helicopter II"
+  },
+  {
+    "id": "1029",
+    "name": "Helicopter III"
+  },
+  {
+    "id": "1030",
+    "name": "Machine Gun Jeep II"
+  },
+  {
+    "id": "1031",
+    "name": "Machine Gun Jeep III"
+  },
+  {
+    "id": "1033",
+    "name": "Mr. Cigar"
+  },
+  {
+    "id": "1036",
+    "name": "Double Bazooka"
+  },
+  {
+    "id": "1037",
+    "name": "MegaTank"
+  },
+  {
+    "id": "1038",
+    "name": "Red chopper"
+  },
+  {
+    "id": "1042",
+    "name": "Sergeant Jack"
+  },
+  {
+    "id": "1044",
+    "name": "Double Bazooka Jeep"
+  },
+  {
+    "id": "1045",
+    "name": "Double Gun Soldier"
+  },
+  {
+    "id": "1046",
+    "name": "Flamethrower"
+  },
+  {
+    "id": "1047",
+    "name": "Dominion Tank"
+  },
+  {
+    "id": "1048",
+    "name": "Stealth Fighter"
+  },
+  {
+    "id": "1054",
+    "name": "Scarface girl"
+  },
+  {
+    "id": "1055",
+    "name": "Mr. Treat"
+  },
+  {
+    "id": "1056",
+    "name": "Elephant rider"
+  },
+  {
+    "id": "1057",
+    "name": "T-Rex Green"
+  },
+  {
+    "id": "1058",
+    "name": "Soldier IV"
+  },
+  {
+    "id": "1059",
+    "name": "Soldier V"
+  },
+  {
+    "id": "1060",
+    "name": "Mortar Thrower"
+  },
+  {
+    "id": "1061",
+    "name": "GunBot"
+  },
+  {
+    "id": "1062",
+    "name": "MegaBot"
+  },
+  {
+    "id": "1063",
+    "name": "Bazooka IV"
+  },
+  {
+    "id": "1064",
+    "name": "Bazooka V"
+  },
+  {
+    "id": "1065",
+    "name": "Antiaircraft battery"
+  },
+  {
+    "id": "1066",
+    "name": "Helicopter IV"
+  },
+  {
+    "id": "1067",
+    "name": "Helicopter V"
+  },
+  {
+    "id": "1069",
+    "name": "Demolition Tank"
+  },
+  {
+    "id": "1070",
+    "name": "Tank IV"
+  },
+  {
+    "id": "1071",
+    "name": "Tank V"
+  },
+  {
+    "id": "1072",
+    "name": "Ranbo"
+  },
+  {
+    "id": "1073",
+    "name": "Erradicator"
+  },
+  {
+    "id": "1074",
+    "name": "Punisher Bot"
+  },
+  {
+    "id": "1075",
+    "name": "Supreme Bot"
+  },
+  {
+    "id": "1076",
+    "name": "Crusader Soldier"
+  },
+  {
+    "id": "1077",
+    "name": "Swordsman Soldier"
+  },
+  {
+    "id": "1078",
+    "name": "Bazooka Soldier"
+  },
+  {
+    "id": "1079",
+    "name": "Jet Soldier"
+  },
+  {
+    "id": "1080",
+    "name": "Motorized Soldier"
+  },
+  {
+    "id": "1081",
+    "name": "Xtreme Retaliator"
+  },
+  {
+    "id": "1082",
+    "name": "Megalancer"
+  },
+  {
+    "id": "1083",
+    "name": "Crusader Tank"
+  },
+  {
+    "id": "1084",
+    "name": "Dreadnought"
+  },
+  {
+    "id": "1085",
+    "name": "Metal Draggy"
+  },
+  {
+    "id": "1086",
+    "name": "Mechanical Golem"
+  },
+  {
+    "id": "1087",
+    "name": "T-Rex"
+  },
+  {
+    "id": "1088",
+    "name": "Skylander"
+  },
+  {
+    "id": "1089",
+    "name": "Mega-Axe"
+  },
+  {
+    "id": "1090",
+    "name": "Giant Walker"
+  },
+  {
+    "id": "1091",
+    "name": "Missile Tank"
+  },
+  {
+    "id": "1092",
+    "name": "Steel Claws"
+  },
+  {
+    "id": "1093",
+    "name": "Fire T-Rex"
+  },
+  {
+    "id": "1094",
+    "name": "Aircraft IV"
+  },
+  {
+    "id": "1095",
+    "name": "Aircraft V"
+  },
+  {
+    "id": "1096",
+    "name": "F-117"
+  },
+  {
+    "id": "1097",
+    "name": "Red Draggy"
+  },
+  {
+    "id": "1098",
+    "name": "Blue Draggy"
+  },
+  {
+    "id": "1099",
+    "name": "Red Dragon"
+  },
+  {
+    "id": "1100",
+    "name": "Blue Dragon"
+  },
+  {
+    "id": "1101",
+    "name": "Celestial Megamech"
+  },
+  {
+    "id": "1102",
+    "name": "Red Baron"
+  },
+  {
+    "id": "1105",
+    "name": "Metal Dragon"
+  },
+  {
+    "id": "1106",
+    "name": "Axe Zoldier"
+  },
+  {
+    "id": "1107",
+    "name": "Gun Zoldier"
+  },
+  {
+    "id": "1109",
+    "name": "Bear Ridda"
+  },
+  {
+    "id": "1110",
+    "name": "Molotov Kopta"
+  },
+  {
+    "id": "1111",
+    "name": "Horned Badass"
+  },
+  {
+    "id": "1112",
+    "name": "Red Spinner"
+  },
+  {
+    "id": "1113",
+    "name": "Flamethrowa Ork"
+  },
+  {
+    "id": "1114",
+    "name": "Knife Throwa"
+  },
+  {
+    "id": "1115",
+    "name": "Big Handsaw Ork"
+  },
+  {
+    "id": "1116",
+    "name": "Orc Tank"
+  },
+  {
+    "id": "1117",
+    "name": "Kamikaze team"
+  },
+  {
+    "id": "1119",
+    "name": "Camu Metal Dragon"
+  },
+  {
+    "id": "1120",
+    "name": "Camu Draggy"
+  },
+  {
+    "id": "1121",
+    "name": "War Buggy"
+  },
+  {
+    "id": "1122",
+    "name": "Orc Zoldier"
+  },
+  {
+    "id": "1123",
+    "name": "Orc Swordsman"
+  },
+  {
+    "id": "1124",
+    "name": "Basic Ork Tank"
+  },
+  {
+    "id": "1126",
+    "name": "Samurai Bot"
+  },
+  {
+    "id": "1127",
+    "name": "Armored Core Alpha"
+  },
+  {
+    "id": "1129",
+    "name": "Samurai Minibot"
+  },
+  {
+    "id": "1133",
+    "name": "Ork Bear Knight"
+  },
+  {
+    "id": "1134",
+    "name": "Ork Kopta"
+  },
+  {
+    "id": "1135",
+    "name": "Horned Beast Ork"
+  },
+  {
+    "id": "1136",
+    "name": "Red Flamethrowa Ork"
+  },
+  {
+    "id": "1137",
+    "name": "Orc Knifethrower"
+  },
+  {
+    "id": "1138",
+    "name": "Red Handsaw Ork"
+  },
+  {
+    "id": "1139",
+    "name": "Kamikaze Bros"
+  },
+  {
+    "id": "1141",
+    "name": "Samurai Bot"
+  },
+  {
+    "id": "1143",
+    "name": "Melee Spider"
+  },
+  {
+    "id": "1144",
+    "name": "Venom Spider"
+  },
+  {
+    "id": "1145",
+    "name": "Big Spider"
+  },
+  {
+    "id": "1146",
+    "name": "Small Alien"
+  },
+  {
+    "id": "1147",
+    "name": "Tusk Alien"
+  },
+  {
+    "id": "1148",
+    "name": "Claw Alien"
+  },
+  {
+    "id": "1149",
+    "name": "Orc Big Tank"
+  },
+  {
+    "id": "1150",
+    "name": "Crusader Bot"
+  },
+  {
+    "id": "1151",
+    "name": "Crusader Priest"
+  },
+  {
+    "id": "1152",
+    "name": "Ultra-Mech"
+  },
+  {
+    "id": "1154",
+    "name": "Viking Axeman"
+  },
+  {
+    "id": "1155",
+    "name": "Viking Soldier"
+  },
+  {
+    "id": "1156",
+    "name": "Viking Bear Knight"
+  },
+  {
+    "id": "1157",
+    "name": "Viking Tank"
+  },
+  {
+    "id": "1158",
+    "name": "Viking Airship"
+  },
+  {
+    "id": "1159",
+    "name": "Viking Hammerer"
+  },
+  {
+    "id": "1160",
+    "name": "Viking Core Bot"
+  },
+  {
+    "id": "1161",
+    "name": "Rune Golem"
+  },
+  {
+    "id": "1162",
+    "name": "Nemesis Core"
+  },
+  {
+    "id": "1165",
+    "name": "Viking Bazooka"
+  },
+  {
+    "id": "1166",
+    "name": "Viking MotoSquad"
+  },
+  {
+    "id": "1167",
+    "name": "Blue Steel Bahamut"
+  },
+  {
+    "id": "1168",
+    "name": "Blue Steel Draggy"
+  },
+  {
+    "id": "1169",
+    "name": "Roller Skater"
+  },
+  {
+    "id": "1170",
+    "name": "Alien Instigator"
+  },
+  {
+    "id": "1172",
+    "name": "Hyper Blazer"
+  },
+  {
+    "id": "1174",
+    "name": "Viking Sniper"
+  },
+  {
+    "id": "1175",
+    "name": "Chainsaw Butcher"
+  },
+  {
+    "id": "1177",
+    "name": "UFO"
+  },
+  {
+    "id": "1178",
+    "name": "Ether Messiah"
+  },
+  {
+    "id": "1180",
+    "name": "Robot Hunter"
+  },
+  {
+    "id": "1181",
+    "name": "Golden Slayer"
+  },
+  {
+    "id": "1183",
+    "name": "Big Laser Viking"
+  },
+  {
+    "id": "1184",
+    "name": "Fire Karateka"
+  },
+  {
+    "id": "1185",
+    "name": "MegaFire T-Rex"
+  },
+  {
+    "id": "1186",
+    "name": "Nebular Spearman"
+  },
+  {
+    "id": "1187",
+    "name": "Nebular Archer"
+  },
+  {
+    "id": "1188",
+    "name": "Greatsword Warrior"
+  },
+  {
+    "id": "1189",
+    "name": "Nebular Rider"
+  },
+  {
+    "id": "1190",
+    "name": "Golden Golem"
+  },
+  {
+    "id": "1191",
+    "name": "Black Dragon"
+  },
+  {
+    "id": "1192",
+    "name": "Dragonborn Mech"
+  },
+  {
+    "id": "1194",
+    "name": "Electric Dragon"
+  },
+  {
+    "id": "1195",
+    "name": "Electric Draggy"
+  },
+  {
+    "id": "1196",
+    "name": "Black Draggy"
+  },
+  {
+    "id": "1197",
+    "name": "Silver Hercules"
+  },
+  {
+    "id": "1198",
+    "name": "Nebular Knight"
+  },
+  {
+    "id": "1199",
+    "name": "Nebular Dragon Rider"
+  },
+  {
+    "id": "1200",
+    "name": "Nebular Assault Quad"
+  },
+  {
+    "id": "1201",
+    "name": "Steel Collector"
+  },
+  {
+    "id": "1202",
+    "name": "Nebular Dragon Rider Draggy"
+  },
+  {
+    "id": "1203",
+    "name": "Viking Airship Outsider"
+  },
+  {
+    "id": "1204",
+    "name": "Viking Hammerer Outsider"
+  },
+  {
+    "id": "1205",
+    "name": "Dual Blade Automech"
+  },
+  {
+    "id": "1207",
+    "name": "Black Belt Archer"
+  },
+  {
+    "id": "1208",
+    "name": "Nebular Priest"
+  },
+  {
+    "id": "1209",
+    "name": "Nebular Bicopter"
+  },
+  {
+    "id": "1210",
+    "name": "Great Shogun Mech"
+  },
+  {
+    "id": "1212",
+    "name": "ATP Mech"
+  },
+  {
+    "id": "1213",
+    "name": "Blazing Beast Rider"
+  },
+  {
+    "id": "1214",
+    "name": "Nebular Maze Warrior"
+  },
+  {
+    "id": "1215",
+    "name": "Massive Cannon Mech"
+  },
+  {
+    "id": "1217",
+    "name": "Brutus Mech"
+  },
+  {
+    "id": "1218",
+    "name": "S.W.A.T. Soldier"
+  },
+  {
+    "id": "1219",
+    "name": "Nebular Dragon Knight"
+  },
+  {
+    "id": "1220",
+    "name": "Nebular Sniper"
+  },
+  {
+    "id": "1221",
+    "name": "Nebular Dragon Knight Draggy"
+  },
+  {
+    "id": "1222",
+    "name": "Liquid Mech "
+  },
+  {
+    "id": "1223",
+    "name": "Killer Driller"
+  },
+  {
+    "id": "1225",
+    "name": "Doctor Shock"
+  },
+  {
+    "id": "1226",
+    "name": "Red Mercury Dragon"
+  },
+  {
+    "id": "1227",
+    "name": "Red Mercury Draggy"
+  },
+  {
+    "id": "1228",
+    "name": "Swamp Monster"
+  },
+  {
+    "id": "1229",
+    "name": "Poison Spider"
+  },
+  {
+    "id": "1230",
+    "name": "Shredder Alien"
+  },
+  {
+    "id": "1231",
+    "name": "Swamp Minion"
+  },
+  {
+    "id": "1232",
+    "name": "Claw Spider"
+  },
+  {
+    "id": "1233",
+    "name": "Huge Spider"
+  },
+  {
+    "id": "1234",
+    "name": "Acid Alien"
+  },
+  {
+    "id": "1235",
+    "name": "Horned Alien"
+  },
+  {
+    "id": "1236",
+    "name": "2-Gun Exobot"
+  },
+  {
+    "id": "1237",
+    "name": "Cyber Samurai Mech"
+  },
+  {
+    "id": "1239",
+    "name": "Dark Ether Messiah"
+  },
+  {
+    "id": "1241",
+    "name": "Converter Wizard"
+  },
+  {
+    "id": "1242",
+    "name": "Hercules Mech"
+  },
+  {
+    "id": "1243",
+    "name": "Forge Dragon"
+  },
+  {
+    "id": "1244",
+    "name": "Forge Dragon Draggy"
+  },
+  {
+    "id": "1245",
+    "name": "Reptile Gun"
+  },
+  {
+    "id": "1246",
+    "name": "Double Cannon Mech"
+  },
+  {
+    "id": "1248",
+    "name": "Laser Blade Automech"
+  },
+  {
+    "id": "1250",
+    "name": "Burning Slayer"
+  },
+  {
+    "id": "1252",
+    "name": "Karateka Gunner"
+  },
+  {
+    "id": "1253",
+    "name": "Swamp Monster"
+  },
+  {
+    "id": "1254",
+    "name": "Prime Automech"
+  },
+  {
+    "id": "1256",
+    "name": "Big Razor Mech"
+  },
+  {
+    "id": "1258",
+    "name": "S.W.A.T. Soldier"
+  },
+  {
+    "id": "1259",
+    "name": "Space Sword Elf"
+  },
+  {
+    "id": "1260",
+    "name": "Space Archer Elf"
+  },
+  {
+    "id": "1261",
+    "name": "Space Knight Elf"
+  },
+  {
+    "id": "1262",
+    "name": "Space Airship Elf"
+  },
+  {
+    "id": "1263",
+    "name": "Spartan Warrior Mech"
+  },
+  {
+    "id": "1265",
+    "name": "Space Priest Elf"
+  },
+  {
+    "id": "1266",
+    "name": "Space Paladin Elf"
+  },
+  {
+    "id": "1267",
+    "name": "Space Elf Cruiser"
+  },
+  {
+    "id": "1268",
+    "name": "Proto Winged Mech"
+  },
+  {
+    "id": "1270",
+    "name": "Spider Bot"
+  },
+  {
+    "id": "1271",
+    "name": "Pharaoh Warrior Mech"
+  },
+  {
+    "id": "1272",
+    "name": "Arachnid Mech"
+  },
+  {
+    "id": "1274",
+    "name": "Multi Morpher"
+  },
+  {
+    "id": "1275",
+    "name": "Space Healer Elf"
+  },
+  {
+    "id": "1276",
+    "name": "Space Scouter Elf"
+  },
+  {
+    "id": "1278",
+    "name": "MegaBot"
+  },
+  {
+    "id": "1279",
+    "name": "Black Brutus Mech"
+  },
+  {
+    "id": "1280",
+    "name": "2-Head Frostfire Dragon"
+  },
+  {
+    "id": "1281",
+    "name": "Silver Gunner Elf"
+  },
+  {
+    "id": "1282",
+    "name": "Dino Rider Elf"
+  },
+  {
+    "id": "1283",
+    "name": "2-Head Frostfire Draggy"
+  },
+  {
+    "id": "1284",
+    "name": "Watcher Hero"
+  },
+  {
+    "id": "1285",
+    "name": "Siege Striker"
+  },
+  {
+    "id": "1287",
+    "name": "Avenger Mech "
+  },
+  {
+    "id": "1288",
+    "name": "Destruction Wizard"
+  },
+  {
+    "id": "1290",
+    "name": "Executioner Mech "
+  },
+  {
+    "id": "1291",
+    "name": "Winged Paladin"
+  },
+  {
+    "id": "1292",
+    "name": "Andromeda Private"
+  },
+  {
+    "id": "1293",
+    "name": "Godzilla Mech"
+  },
+  {
+    "id": "1295",
+    "name": "Andromeda Combat Droid"
+  },
+  {
+    "id": "1296",
+    "name": "Andromeda Spaceship"
+  },
+  {
+    "id": "1297",
+    "name": "King Kong Mech"
+  },
+  {
+    "id": "1299",
+    "name": "Gamera Mech"
+  },
+  {
+    "id": "1301",
+    "name": "Z Project Mech"
+  },
+  {
+    "id": "1303",
+    "name": "Massive Gunner Mech"
+  },
+  {
+    "id": "1305",
+    "name": "Fire Godzilla Mech"
+  },
+  {
+    "id": "1307",
+    "name": "Glaivestorm Mech"
+  },
+  {
+    "id": "1309",
+    "name": "Stampede Mech"
+  },
+  {
+    "id": "1311",
+    "name": "Hellfire Mech"
+  },
+  {
+    "id": "1313",
+    "name": "Splinter Mech"
+  },
+  {
+    "id": "1315",
+    "name": "Anvil Pattern Mech"
+  },
+  {
+    "id": "1317",
+    "name": "Bladestorm Mech"
+  },
+  {
+    "id": "1319",
+    "name": "Spectre Mech"
+  },
+  {
+    "id": "1321",
+    "name": "Stalker Mech"
+  },
+  {
+    "id": "1323",
+    "name": "Slaughterer Mech"
+  },
+  {
+    "id": "1325",
+    "name": "Crusher Monarch Mech"
+  },
+  {
+    "id": "1327",
+    "name": "Vortex Mech"
+  },
+  {
+    "id": "1329",
+    "name": "Bombardier Mech"
+  },
+  {
+    "id": "1331",
+    "name": "Forgelord Mech"
+  },
+  {
+    "id": "1333",
+    "name": "Shredder Mech"
+  },
+  {
+    "id": "1335",
+    "name": "Raven Mech"
+  },
+  {
+    "id": "1337",
+    "name": "Cyclone Mech"
+  },
+  {
+    "id": "1339",
+    "name": "Yamato Mech"
+  },
+  {
+    "id": "1341",
+    "name": "Steel Wanderer Mech"
+  },
+  {
+    "id": "1343",
+    "name": "Tempest Mech"
+  },
+  {
+    "id": "1345",
+    "name": "Servoworm"
+  },
+  {
+    "id": "1347",
+    "name": "Scarab"
+  },
+  {
+    "id": "1349",
+    "name": "Centaur"
+  },
+  {
+    "id": "1351",
+    "name": "Evil Slaughterer"
+  },
+  {
+    "id": "1353",
+    "name": "Bismark"
+  },
+  {
+    "id": "1355",
+    "name": "Superfulcrum"
+  },
+  {
+    "id": "1356",
+    "name": "Bonecrusha"
+  },
+  {
+    "id": "1358",
+    "name": "Bushwacker"
+  },
+  {
+    "id": "1360",
+    "name": "Brawler"
+  },
+  {
+    "id": "1362",
+    "name": "Havoc"
+  },
+  {
+    "id": "1364",
+    "name": "Hammerhead"
+  },
+  {
+    "id": "1366",
+    "name": "Templar Exosuit"
+  },
+  {
+    "id": "1367",
+    "name": "Marauder Battle Chasis"
+  },
+  {
+    "id": "1368",
+    "name": "Atomic Bonecrusha"
+  },
+  {
+    "id": "1370",
+    "name": "Drone Master"
+  },
+  {
+    "id": "1375",
+    "name": "Reaper"
+  },
+  {
+    "id": "1377",
+    "name": "Black Hole"
+  },
+  {
+    "id": "1379",
+    "name": "Ignition"
+  },
+  {
+    "id": "1381",
+    "name": "Harvester"
+  },
+  {
+    "id": "1382",
+    "name": "Agamemnon Fortress"
+  },
+  {
+    "id": "1383",
+    "name": "Typhoon Servo Dragon"
+  },
+  {
+    "id": "1385",
+    "name": "Scarlet Superfulcrum"
+  },
+  {
+    "id": "1388",
+    "name": "Guardian"
+  },
+  {
+    "id": "1390",
+    "name": "Knight Exosuit"
+  },
+  {
+    "id": "1392",
+    "name": "Fire Gamera"
+  },
+  {
+    "id": "1394",
+    "name": "Cyclone Battlesuit"
+  },
+  {
+    "id": "1396",
+    "name": "Chemical Gunner"
+  },
+  {
+    "id": "1398",
+    "name": "Blue Anvil"
+  },
+  {
+    "id": "1400",
+    "name": "Drone Master 2.0"
+  },
+  {
+    "id": "1406",
+    "name": "Overseer"
+  },
+  {
+    "id": "1408",
+    "name": "Urban Buster"
+  },
+  {
+    "id": "1410",
+    "name": "Skorpion Fortress"
+  },
+  {
+    "id": "1412",
+    "name": "Pauldron Mech"
+  },
+  {
+    "id": "1414",
+    "name": "Sharkbite"
+  },
+  {
+    "id": "1416",
+    "name": "Crimson Centurion"
+  },
+  {
+    "id": "1418",
+    "name": "Steam Warlord"
+  },
+  {
+    "id": "1420",
+    "name": "Cyber-Inquisitor"
+  },
+  {
+    "id": "1422",
+    "name": "Knuckledragger Mech"
+  },
+  {
+    "id": "1424",
+    "name": "Steel Gladiator"
+  },
+  {
+    "id": "1428",
+    "name": "Tarantula"
+  },
+  {
+    "id": "1430",
+    "name": "Intruder"
+  },
+    {
+    "id": "1326",
+    "name": "crusherMonarchMech"
+  }
+]
