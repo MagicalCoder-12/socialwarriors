@@ -1,7 +1,7 @@
 from engine import timestamp_now
 
-version_name = "alpha 0.02"
-version_code = "0.02a"
+version_name = "alpha 0.03"
+version_code = "0.03a"
 
 def migrate_loaded_save(save: dict):
     
@@ -47,5 +47,11 @@ def migrate_loaded_save(save: dict):
     if save["version"] == "0.01a":
         _changed = True
         save["version"] = "0.02a"
+        
+    # 0.03a migration
+    # No specific migrations needed for this version
+    if save["version"] == "0.02a":
+        _changed = True
+        save["version"] = "0.03a"
 
     return _changed
