@@ -4,4 +4,7 @@
 
 # This mod removes the need to pay with cash or hire friends for most buildings making it easier to progress.
 # Usually you would have to pay cash to open a building like a factory since hiring friends cannot be done anymore.
-# no_hiring_needed
+no_hiring_needed
+
+# This mod skips chapter timers, allowing instant progression through chapters
+skip_chapter_timers

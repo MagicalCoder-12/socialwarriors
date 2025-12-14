@@ -425,6 +425,9 @@ def control_panel():
 def serve_template_images(filename):
     return send_from_directory('templates/img', filename)
 
+@app.route('/templates/fusion_units.json')
+def serve_fusion_units():
+    return send_from_directory('templates', 'fusion_units.json')
 
 
 ## GAME STATIC
@@ -627,6 +630,44 @@ def flash_sync_error_response():
     print("flash_sync_error", reason, ". --", request.values)
     return redirect("/play.html")
 
+@app.route("/fusions")
+def fusion_results():
+    # Import the get_game_config function to get the patched config
+    from get_game_config import get_game_config
+    
+    try:
+        # Get the patched game configuration
+        config_data = get_game_config()
+    except Exception as e:
+        return jsonify({"error": f"Failed to load config: {str(e)}"}), 500
+    
+    # Extract fusion-related items
+    fusion_items = []
+    
+    # The config_data returned by get_game_config is a tuple, get the first element
+    if isinstance(config_data, tuple):
+        game_config = config_data[0] if config_data else {}
+    else:
+        game_config = config_data or {}
+    
+    # Extract items from the config
+    items = game_config.get("items", [])
+    
+    for item in items:
+        # Check if the item has breeding_order (indicating it's a fusion unit)
+        if "breeding_order" in item:
+            fusion_items.append({
+                "id": item["id"],
+                "name": item["name"],
+                "breeding_order": item["breeding_order"],
+                "sm_training_time": item.get("sm_training_time", "Unknown")
+            })
+    
+    # Sort by breeding_order
+    fusion_items.sort(key=lambda x: int(x["breeding_order"]))
+    
+    return render_template("fusion_results.html", fusion_items=fusion_items)
+
 @app.route(__DYNAMIC_ROOT + "/command.php", methods=['POST'])
 def command_response():
     USERID = request.values['USERID']
@@ -656,6 +697,36 @@ def alliance():
 
     response = {}
     return(response, 200)
+
+# API endpoint for skipping chapter timer
+@app.route("/api/skip_chapter_timer", methods=["POST"])
+def skip_chapter_timer():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    
+    # Load the current save
+    data = read_save(ACTIVE_SAVE)
+    
+    # Set the last chapter timestamp to 0 to skip the timer
+    data["maps"][0]["timestampLastChapter"] = 0
+    
+    # Backup and write the updated save
+    backup_save(ACTIVE_SAVE)
+    write_save(ACTIVE_SAVE, data)
+    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["timestampLastChapter"] = 0
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+    
+    return jsonify({
+        "success": True,
+        "message": "Chapter timer skipped successfully"
+    })
 
 
 ########

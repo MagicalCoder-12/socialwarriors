@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fusion Results - Social Wars</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0c0;
+            margin-bottom: 20px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #00c9ff, #92fe9d);
+            color: #1a1a2e;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .back-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .search-container {
+            background: rgba(30, 30, 60, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(92, 92, 151, 0.3);
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(92, 92, 151, 0.5);
+            background: rgba(20, 20, 40, 0.7);
+            color: white;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #4dccff;
+            box-shadow: 0 0 10px rgba(77, 204, 255, 0.5);
+        }
+        
+        .stats {
+            background: rgba(30, 30, 60, 0.7);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(92, 92, 151, 0.3);
+        }
+        
+        .fusion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .fusion-card {
+            background: rgba(30, 30, 60, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(92, 92, 151, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .fusion-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .fusion-id {
+            font-size: 0.9rem;
+            color: #a0a0c0;
+            margin-bottom: 5px;
+        }
+        
+        .fusion-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #4dccff;
+        }
+        
+        .fusion-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .detail-item {
+            text-align: center;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: #a0a0c0;
+        }
+        
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .breeding-order {
+            color: #ff6b6b;
+        }
+        
+        .training-time {
+            color: #4dccff;
+        }
+        
+        @media (max-width: 768px) {
+            .fusion-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fusion Results</h1>
+            <p class="subtitle">Complete list of all fusion units with their breeding orders and training times</p>
+            <a href="/play.html" class="back-button">← Back to Game</a>
+        </header>
+        
+        <div class="search-container">
+            <input type="text" id="searchBox" class="search-box" placeholder="Search for fusion units by name or ID...">
+        </div>
+        
+        <div class="stats">
+            <p>Total Fusion Units: <span id="totalUnits">{{ fusion_items|length }}</span> | Showing: <span id="showingUnits">{{ fusion_items|length }}</span></p>
+        </div>
+        
+        {% if fusion_items %}
+            <div class="fusion-grid" id="fusionGrid">
+                {% for item in fusion_items %}
+                <div class="fusion-card" data-id="{{ item.id }}" data-name="{{ item.name.lower() }}">
+                    <div class="fusion-id">ID: {{ item.id }}</div>
+                    <div class="fusion-name">{{ item.name }}</div>
+                    <div class="fusion-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Breeding Order</div>
+                            <div class="detail-value breeding-order">{{ item.breeding_order }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Training Time</div>
+                            <div class="detail-value training-time">{{ item.sm_training_time }}s</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="stats">
+                <p>No fusion units found in the current configuration.</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        // Store all fusion units for filtering
+        const fusionUnits = [
+            {% for item in fusion_items %}
+            {
+                id: "{{ item.id }}",
+                name: "{{ item.name }}",
+                element: document.querySelector(`.fusion-card[data-id="{{ item.id }}"]`)
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ];
+        
+        // Get DOM elements
+        const searchBox = document.getElementById('searchBox');
+        const fusionGrid = document.getElementById('fusionGrid');
+        const totalUnits = document.getElementById('totalUnits');
+        const showingUnits = document.getElementById('showingUnits');
+        
+        // Add event listener for search input
+        searchBox.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            // Filter fusion units
+            const filteredUnits = fusionUnits.filter(unit => {
+                return unit.id.includes(searchTerm) || unit.name.toLowerCase().includes(searchTerm);
+            });
+            
+            // Hide all units first
+            fusionUnits.forEach(unit => {
+                unit.element.style.display = 'none';
+            });
+            
+            // Show filtered units
+            filteredUnits.forEach(unit => {
+                unit.element.style.display = 'block';
+            });
+            
+            // Update stats
+            showingUnits.textContent = filteredUnits.length;
+        });
+    </script>
+</body>
+</html>

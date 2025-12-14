@@ -311,6 +311,20 @@
                     <button class="apply-btn" onclick="setGold()">Apply</button>
                 </div>
             </div>
+            
+            <!-- Chapter Timer Skip Card -->
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-icon-container" style="background: linear-gradient(135deg, #FF6B6B, #FF8E53);">
+                        <span class="resource-icon" style="background: #FF6B6B; border-radius: 50%; width: 30px; height: 30px; display: block;"></span>
+                    </div>
+                    <h2 class="resource-title">Chapter Timer</h2>
+                </div>
+                <div class="resource-value" style="font-size: 1.2rem; margin: 15px 0;">Skip Mission Wait</div>
+                <div class="input-group">
+                    <button class="apply-btn" onclick="skipChapterTimer()" style="background: linear-gradient(90deg, #FF6B6B, #FF8E53);">Skip Timer</button>
+                </div>
+            </div>
         </div>
         
         <div class="message">
@@ -439,6 +453,22 @@
             const data = await res.json();
             document.getElementById('msg').textContent = data.message || 'Gold updated successfully';
             loadData();
+        }
+        
+        // New function to skip chapter timer
+        async function skipChapterTimer() {
+            const res = await fetch('/api/skip_chapter_timer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('msg').textContent = data.message || 'Chapter timer skipped successfully';
+            } else {
+                const data = await res.json();
+                document.getElementById('msg').textContent = data.error || 'Failed to skip chapter timer';
+            }
         }
 
         // Load data when page loads
