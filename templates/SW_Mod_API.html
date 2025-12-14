@@ -1,165 +1,450 @@
 <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Social Wars Resources API</title>
-        <style>
-            body { font-family: Arial; background:#1b1b1b; color:#fff; text-align:center; padding:40px; }
-            .card { background:#2c2c2c; padding:20px; border-radius:10px; width:300px; margin:auto; margin-bottom: 20px; }
-            input { width:80%; padding:8px; margin:10px 0; border:none; border-radius:5px; }
-            button { padding:10px 20px; background:#28a745; color:#fff; border:none; border-radius:5px; cursor:pointer; }
-            button:hover { background:#218838; }
-            .resource-icon {
-                width: 20px;
-                height: 20px;
-                display: inline-block;
-                border-radius: 50%;
-                margin-right: 5px;
-                vertical-align: middle;
+<html>
+<head>
+    <title>Social Wars Resources API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            width: 150px;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0c0;
+            margin-bottom: 20px;
+        }
+        
+        .player-info {
+            background: rgba(30, 30, 60, 0.7);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin: 0 auto 30px;
+            max-width: 500px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(92, 92, 151, 0.3);
+        }
+        
+        .player-info p {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            margin: 8px 0;
+        }
+        
+        .player-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .resource-card {
+            background: rgba(30, 30, 60, 0.7);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(92, 92, 151, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .resource-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .resource-icon-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .resource-icon {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .resource-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .resource-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 15px 0;
+            color: #4dccff;
+            text-shadow: 0 0 10px rgba(77, 204, 255, 0.5);
+        }
+        
+        .input-group {
+            margin: 20px 0;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .resource-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px solid rgba(92, 92, 151, 0.5);
+            background: rgba(20, 20, 40, 0.7);
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .resource-input:focus {
+            outline: none;
+            border-color: #4dccff;
+            box-shadow: 0 0 10px rgba(77, 204, 255, 0.5);
+        }
+        
+        .apply-btn {
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(90deg, #00c9ff, #92fe9d);
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .apply-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .message {
+            background: rgba(30, 30, 60, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(92, 92, 151, 0.3);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #a0a0c0;
+            font-size: 0.9rem;
+        }
+        
+        /* Color variations for resource icons */
+        .cash-bg { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .oil-bg { background: linear-gradient(135deg, #000000, #2c2c2c); }
+        .wood-bg { background: linear-gradient(135deg, #8B4513, #A0522D); }
+        .steel-bg { background: linear-gradient(135deg, #808080, #A9A9A9); }
+        .gold-bg { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .resources-grid {
+                grid-template-columns: 1fr;
             }
-            .oil-icon { background: #000000; }
-            .wood-icon { background: #8B4513; }
-            .steel-icon { background: #808080; }
-            .gold-icon { background: #FFD700; }
-        </style>
-    </head>
-    <body>
-        <h2><img src="templates/img/logo.png" alt="Social-Wars-logo" style="width: 20vw;"></h2>
-        <h2><img src="templates/img/cash.png" alt="cash"> Resources API <img src="templates/img/cash.png" alt="cash"></h2>
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="templates/img/logo.png" alt="Social Wars Logo" class="logo">
+            <h1>Resources Control Panel</h1>
+            <p class="subtitle">Manage your game resources in real-time</p>
+        </header>
         
-        <div class="card">
-            <p id="player" align="left" style="padding-left: 20px;">
-                <img src="templates/img/icon.png" alt="icon" style="width: 20px;">Current Player: ...</p>
-            <p id="cash" align="left" style="padding-left: 20px;">
-                <img src="templates/img/cash.png" alt="cash" style="width: 20px;">Cash: ...</p>
-            <input id="newCash" type="number" placeholder="Enter new cash value">
-            <button onclick="setCash()">Apply</button>
+        <div class="player-info">
+            <p>
+                <img src="templates/img/icon.png" alt="Player Icon" class="player-icon">
+                <span id="player">Current Player: Loading...</span>
+            </p>
         </div>
         
-        <div class="card">
-            <p id="oil" align="left" style="padding-left: 20px;">
-                <span class="resource-icon oil-icon"></span>Oil: ...</p>
-            <input id="newOil" type="number" placeholder="Enter new oil value">
-            <button onclick="setOil()">Apply</button>
+        <div class="resources-grid">
+            <!-- Cash Card -->
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-icon-container cash-bg">
+                        <img src="templates/img/cash.png" alt="Cash" class="resource-icon">
+                    </div>
+                    <h2 class="resource-title">Cash</h2>
+                </div>
+                <div class="resource-value" id="cash">Loading...</div>
+                <div class="input-group">
+                    <input type="number" id="newCash" class="resource-input" placeholder="Enter new value">
+                    <button class="apply-btn" onclick="setCash()">Apply</button>
+                </div>
+            </div>
+            
+            <!-- Oil Card -->
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-icon-container oil-bg">
+                        <span class="resource-icon" style="background: #000000; border-radius: 50%; width: 30px; height: 30px; display: block;"></span>
+                    </div>
+                    <h2 class="resource-title">Oil</h2>
+                </div>
+                <div class="resource-value" id="oil">Loading...</div>
+                <div class="input-group">
+                    <input type="number" id="newOil" class="resource-input" placeholder="Enter new value">
+                    <button class="apply-btn" onclick="setOil()">Apply</button>
+                </div>
+            </div>
+            
+            <!-- Wood Card -->
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-icon-container wood-bg">
+                        <span class="resource-icon" style="background: #8B4513; border-radius: 50%; width: 30px; height: 30px; display: block;"></span>
+                    </div>
+                    <h2 class="resource-title">Wood</h2>
+                </div>
+                <div class="resource-value" id="wood">Loading...</div>
+                <div class="input-group">
+                    <input type="number" id="newWood" class="resource-input" placeholder="Enter new value">
+                    <button class="apply-btn" onclick="setWood()">Apply</button>
+                </div>
+            </div>
+            
+            <!-- Steel Card -->
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-icon-container steel-bg">
+                        <span class="resource-icon" style="background: #808080; border-radius: 50%; width: 30px; height: 30px; display: block;"></span>
+                    </div>
+                    <h2 class="resource-title">Steel</h2>
+                </div>
+                <div class="resource-value" id="steel">Loading...</div>
+                <div class="input-group">
+                    <input type="number" id="newSteel" class="resource-input" placeholder="Enter new value">
+                    <button class="apply-btn" onclick="setSteel()">Apply</button>
+                </div>
+            </div>
+            
+            <!-- Gold Card -->
+            <div class="resource-card">
+                <div class="resource-header">
+                    <div class="resource-icon-container gold-bg">
+                        <span class="resource-icon" style="background: #FFD700; border-radius: 50%; width: 30px; height: 30px; display: block;"></span>
+                    </div>
+                    <h2 class="resource-title">Gold</h2>
+                </div>
+                <div class="resource-value" id="gold">Loading...</div>
+                <div class="input-group">
+                    <input type="number" id="newGold" class="resource-input" placeholder="Enter new value">
+                    <button class="apply-btn" onclick="setGold()">Apply</button>
+                </div>
+            </div>
         </div>
         
-        <div class="card">
-            <p id="wood" align="left" style="padding-left: 20px;">
-                <span class="resource-icon wood-icon"></span>Wood: ...</p>
-            <input id="newWood" type="number" placeholder="Enter new wood value">
-            <button onclick="setWood()">Apply</button>
+        <div class="message">
+            <p id="msg">Ready to modify resources</p>
         </div>
         
-        <div class="card">
-            <p id="steel" align="left" style="padding-left: 20px;">
-                <span class="resource-icon steel-icon"></span>Steel: ...</p>
-            <input id="newSteel" type="number" placeholder="Enter new steel value">
-            <button onclick="setSteel()">Apply</button>
-        </div>
-        
-        <div class="card">
-            <p id="gold" align="left" style="padding-left: 20px;">
-                <span class="resource-icon gold-icon"></span>Gold: ...</p>
-            <input id="newGold" type="number" placeholder="Enter new gold value">
-            <button onclick="setGold()">Apply</button>
-        </div>
-        
-        <p id="msg"></p>
+        <footer>
+            <p>Social Wars Game Modification API &copy; 2025</p>
+        </footer>
+    </div>
 
-        <script>
+    <script>
         async function loadData() {
             const res = await fetch('/api/cash');
             if (!res.ok) return;
             const data = await res.json();
-            document.getElementById('player').textContent = 'Player: ' + data.player;
-            document.getElementById('cash').textContent = 'Cash: ' + data.cash;
+            document.getElementById('player').textContent = 'Current Player: ' + data.player;
+            document.getElementById('cash').textContent = data.cash.toLocaleString();
             
             // Load other resources
             const oilRes = await fetch('/api/oil');
             if (oilRes.ok) {
                 const oilData = await oilRes.json();
-                document.getElementById('oil').textContent = 'Oil: ' + oilData.oil;
+                document.getElementById('oil').textContent = oilData.oil.toLocaleString();
             }
             
             const woodRes = await fetch('/api/wood');
             if (woodRes.ok) {
                 const woodData = await woodRes.json();
-                document.getElementById('wood').textContent = 'Wood: ' + woodData.wood;
+                document.getElementById('wood').textContent = woodData.wood.toLocaleString();
             }
             
             const steelRes = await fetch('/api/steel');
             if (steelRes.ok) {
                 const steelData = await steelRes.json();
-                document.getElementById('steel').textContent = 'Steel: ' + steelData.steel;
+                document.getElementById('steel').textContent = steelData.steel.toLocaleString();
             }
             
             const goldRes = await fetch('/api/gold');
             if (goldRes.ok) {
                 const goldData = await goldRes.json();
-                document.getElementById('gold').textContent = 'Gold: ' + goldData.gold;
+                document.getElementById('gold').textContent = goldData.gold.toLocaleString();
             }
         }
 
         async function setCash() {
             const val = document.getElementById('newCash').value;
+            if (!val) {
+                document.getElementById('msg').textContent = 'Please enter a value';
+                return;
+            }
+            
             const res = await fetch('/api/set_cash', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: Number(val) })
             });
             const data = await res.json();
-            document.getElementById('msg').textContent = data.message || 'Done.';
+            document.getElementById('msg').textContent = data.message || 'Cash updated successfully';
             loadData();
         }
         
         async function setOil() {
             const val = document.getElementById('newOil').value;
+            if (!val) {
+                document.getElementById('msg').textContent = 'Please enter a value';
+                return;
+            }
+            
             const res = await fetch('/api/set_oil', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: Number(val) })
             });
             const data = await res.json();
-            document.getElementById('msg').textContent = data.message || 'Done.';
+            document.getElementById('msg').textContent = data.message || 'Oil updated successfully';
             loadData();
         }
         
         async function setWood() {
             const val = document.getElementById('newWood').value;
+            if (!val) {
+                document.getElementById('msg').textContent = 'Please enter a value';
+                return;
+            }
+            
             const res = await fetch('/api/set_wood', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: Number(val) })
             });
             const data = await res.json();
-            document.getElementById('msg').textContent = data.message || 'Done.';
+            document.getElementById('msg').textContent = data.message || 'Wood updated successfully';
             loadData();
         }
         
         async function setSteel() {
             const val = document.getElementById('newSteel').value;
+            if (!val) {
+                document.getElementById('msg').textContent = 'Please enter a value';
+                return;
+            }
+            
             const res = await fetch('/api/set_steel', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: Number(val) })
             });
             const data = await res.json();
-            document.getElementById('msg').textContent = data.message || 'Done.';
+            document.getElementById('msg').textContent = data.message || 'Steel updated successfully';
             loadData();
         }
         
         async function setGold() {
             const val = document.getElementById('newGold').value;
+            if (!val) {
+                document.getElementById('msg').textContent = 'Please enter a value';
+                return;
+            }
+            
             const res = await fetch('/api/set_gold', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: Number(val) })
             });
             const data = await res.json();
-            document.getElementById('msg').textContent = data.message || 'Done.';
+            document.getElementById('msg').textContent = data.message || 'Gold updated successfully';
             loadData();
         }
 
-        loadData();
-        </script>
-    </body>
-    </html>
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+        });
+    </script>
+</body>
+</html>
