@@ -707,8 +707,16 @@ def skip_chapter_timer():
     # Load the current save
     data = read_save(ACTIVE_SAVE)
     
+    # Get the current map
+    current_map = data["maps"][0]
+    
     # Set the last chapter timestamp to 0 to skip the timer
-    data["maps"][0]["timestampLastChapter"] = 0
+    current_map["timestampLastChapter"] = 0
+    
+    # Also reset any chapter-related variables that might be blocking progression
+    if "currentQuestVars" in current_map:
+        # Clear any quest variables that might be preventing progression
+        current_map["currentQuestVars"] = {}
     
     # Backup and write the updated save
     backup_save(ACTIVE_SAVE)
@@ -720,12 +728,70 @@ def skip_chapter_timer():
         # Update the in-memory session data
         if user_id in sessions.__saves:
             sessions.__saves[user_id]["maps"][0]["timestampLastChapter"] = 0
+            # Also clear quest vars in session
+            if "currentQuestVars" in sessions.__saves[user_id]["maps"][0]:
+                sessions.__saves[user_id]["maps"][0]["currentQuestVars"] = {}
             # Save the session to disk as well to persist changes
             sessions.save_session(user_id)
     
     return jsonify({
         "success": True,
-        "message": "Chapter timer skipped successfully"
+        "message": "Chapter timer skipped successfully",
+        "details": {
+            "timestampLastChapter": 0,
+            "idCurrentMission": current_map.get("idCurrentMission", "unknown")
+        }
+    })
+
+
+# API endpoint for forcing mission collection (bypasses all timer checks)
+@app.route("/api/force_collect_mission", methods=["POST"])
+def force_collect_mission():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    
+    # Parse request data
+    mission_id = request.json.get("mission_id")
+    if not mission_id:
+        return jsonify({"error": "Mission ID is required"}), 400
+    
+    # Load the current save
+    data = read_save(ACTIVE_SAVE)
+    
+    # Get the current map
+    current_map = data["maps"][0]
+    
+    # Force collect the mission by directly setting the current mission
+    current_map["idCurrentMission"] = str(mission_id)
+    
+    # Reset the chapter timer to 0 to ensure no waiting
+    current_map["timestampLastChapter"] = 0
+    
+    # Clear any quest variables that might be preventing progression
+    current_map["currentQuestVars"] = {}
+    
+    # Backup and write the updated save
+    backup_save(ACTIVE_SAVE)
+    write_save(ACTIVE_SAVE, data)
+    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["maps"][0]["idCurrentMission"] = str(mission_id)
+            sessions.__saves[user_id]["maps"][0]["timestampLastChapter"] = 0
+            sessions.__saves[user_id]["maps"][0]["currentQuestVars"] = {}
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+    
+    return jsonify({
+        "success": True,
+        "message": f"Mission {mission_id} collected successfully",
+        "details": {
+            "idCurrentMission": str(mission_id),
+            "timestampLastChapter": 0
+        }
     })
 
 

@@ -324,6 +324,11 @@
                 <div class="input-group">
                     <button class="apply-btn" onclick="skipChapterTimer()" style="background: linear-gradient(90deg, #FF6B6B, #FF8E53);">Skip Timer</button>
                 </div>
+                <div class="resource-value" style="font-size: 1.0rem; margin: 15px 0;">Force Next Mission</div>
+                <div class="input-group">
+                    <input type="number" id="missionId" class="resource-input" placeholder="Enter mission ID" style="width: 120px;">
+                    <button class="apply-btn" onclick="forceCollectMission()" style="background: linear-gradient(90deg, #FF8E53, #FF6B6B);">Force Collect</button>
+                </div>
             </div>
         </div>
         
@@ -468,6 +473,30 @@
             } else {
                 const data = await res.json();
                 document.getElementById('msg').textContent = data.error || 'Failed to skip chapter timer';
+            }
+        }
+        
+        // New function to force mission collection
+        async function forceCollectMission() {
+            const missionId = document.getElementById('missionId').value;
+            if (!missionId) {
+                document.getElementById('msg').textContent = 'Please enter a mission ID';
+                return;
+            }
+            
+            const res = await fetch('/api/force_collect_mission', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mission_id: Number(missionId) })
+            });
+            
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('msg').textContent = data.message || 'Mission collected successfully';
+                loadData(); // Refresh the data to show updated mission
+            } else {
+                const data = await res.json();
+                document.getElementById('msg').textContent = data.error || 'Failed to collect mission';
             }
         }
 

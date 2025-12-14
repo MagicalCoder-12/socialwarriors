@@ -444,17 +444,22 @@ def do_command(USERID, map_id, cmd, args, resources_changed):
         if "globals" in config and "chapter_timer_skip_enabled" in config["globals"]:
             skip_timer = config["globals"]["chapter_timer_skip_enabled"]
         
-        # Only set timestamp if not skipping timers
-        if not skip_timer:
+        # Check if this is a forced collection (timestampLastChapter is already 0)
+        is_forced = map.get("timestampLastChapter", 0) == 0
+        
+        # Only set timestamp if not skipping timers and not already forced
+        if not skip_timer and not is_forced:
             map["timestampLastChapter"] = time_now
         else:
             # Set timestamp to 0 to skip timer
             map["timestampLastChapter"] = 0
+            
         map["currentQuestVars"] = {}
 
         print("Advanced to mission", str(next_mission))
-        if skip_timer:
-            print("Chapter timer skipped due to mod")
+        if skip_timer or is_forced:
+            print("Chapter timer skipped due to mod or forced collection")
+
     elif cmd == "win_daily_bonus":
         item = args[0]
         next_id = args[1] + 1
