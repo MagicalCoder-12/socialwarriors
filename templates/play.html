@@ -84,7 +84,7 @@
             <object>
                 <embed id="swf"
                     src="http://{{SERVERIP}}:{{SERVERPORT}}/static/socialwars/flash/SWLoader.swf?swftoload=/static/socialwars/flash/{{GAMEVERSION}}"
-                    allowFullScreen="true" bgcolor="#669C2C" quality=high WIDTH="760" HEIGHT="600" NAME="se" ALIGN=""
+                    allowFullScreen="true" bgcolor="#669C2C" quality="high" WIDTH="760" HEIGHT="600" NAME="se" ALIGN=""
                     TYPE="application/x-shockwave-flash" PLUGINSPAGE="http://www.macromedia.com/go/getflashplayer"
                     flashvars='spdebug=notnull&brk=0
                     &staticUrl=http://{{SERVERIP}}:{{SERVERPORT}}/static/socialwars/&brk=0
@@ -101,12 +101,28 @@
                     &serverTime={{serverTime}}&brk=0
                     &forceSyncError=1&brk=0
                     &forceAttackReload=0&brk=0
-                    &forceQuestReload=0&brk=0'>
+                    &forceQuestReload=0&brk=0'
+                    onerror="console.error('Failed to load Flash content');">
                 </embed>
             </object>
             <br>
-            <a id="expand" href="#" style="text-decoration: none; color: #777;"></a>
+            <div id="flash-error" style="display: none; color: red; font-weight: bold; margin-top: 10px;">
+                Error: Flash content failed to load. Please check that:
+                <ul>
+                    <li>You're using a Flash-enabled browser</li>
+                    <li>Flash is enabled in your browser settings</li>
+                    <li>All game assets are present in the assets directory</li>
+                </ul>
+            </div>
             <script>
+                // Check if Flash content loaded properly
+                setTimeout(function() {
+                    var swf = document.getElementById('swf');
+                    if (!swf || swf.clientHeight === 0) {
+                        document.getElementById('flash-error').style.display = 'block';
+                    }
+                }, 5000);
+
                 function showRefreshReminder() {
                     alert("Please refresh the game page (http://127.0.0.1:5055/play.html) after modifying cash for changes to take effect!");
                 }
