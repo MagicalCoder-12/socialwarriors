@@ -16,7 +16,7 @@ exit
 
 :pyInstaller
 echo [+] Starting pyInstaller...
-pyinstaller ^
+python -m Pyinstaller ^
  --onedir ^
  --console ^
  --noupx ^
