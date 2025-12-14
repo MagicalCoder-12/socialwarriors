@@ -486,6 +486,10 @@ def serve_fusion_units():
 
 @app.route(__STATIC_ROOT + "/<path:path>")
 def static_assets_loader(path):
+    # Ensure the path doesn't try to traverse outside the assets directory
+    if ".." in path or path.startswith("/"):
+        return ("Forbidden", 403)
+    
     # LITE-WEIGHT BUILD: ASSETS FROM GITHUB
     if False:
         cdn = "https://raw.githubusercontent.com/AcidCaos/socialwarriors/main/assets/"
@@ -497,7 +501,11 @@ def static_assets_loader(path):
         m.seek(0)
         return send_file(m, download_name=path.split("/")[-1:][0])
     # OFFLINE BUILD
-    return send_from_directory(ASSETS_DIR, path)
+    try:
+        return send_from_directory(ASSETS_DIR, path)
+    except FileNotFoundError:
+        print(f"[WARNING] Asset not found: {path}")
+        return ("Asset not found", 404)
 
 ## GAME DYNAMIC
 
@@ -791,4 +799,17 @@ print (" [+] Running server...")
 
 if __name__ == '__main__':
     app.secret_key = 'SECRET_KEY'
-    app.run(host=host, port=port, debug=False)
+    # Clear any buffered output and ensure our messages are visible
+    import sys
+    print("=" * 60)
+    print(f" [+] SERVER READY! Access the game at: http://{host}:{port}/")
+    print(" [+] Make sure to use a Flash-enabled browser to play")
+    print("=" * 60)
+    sys.stdout.flush()  # Force output to be displayed immediately
+    
+    try:
+        app.run(host=host, port=port, debug=False)
+    except Exception as e:
+        print(f" [!] Server failed to start: {e}")
+        print(" [!] Please check if port 5055 is already in use")
+        sys.exit(1)

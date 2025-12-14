@@ -8,3 +8,5 @@ no_hiring_needed
 
 # This mod skips chapter timers, allowing instant progression through chapters
 skip_chapter_timers
+
+
