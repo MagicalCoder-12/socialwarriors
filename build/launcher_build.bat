@@ -1,5 +1,5 @@
 @echo off
-set NAME=social-warriors_0.02a
+set NAME=social-warriors_0.03a
 
 REM remember to activate the venv first (Scripts\activate)
 
@@ -13,7 +13,7 @@ exit
 
 :pyInstaller
 echo [+] Starting pyInstaller...
-python -m Pyinstaller --onefile ^
+Pyinstaller --onefile ^
  --console ^
  --add-data "..\..\assets;assets" ^
  --add-data "..\..\stub;stub" ^
