@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Social Wars Cash Register API</title>
+        <style>
+            body { font-family: Arial; background:#1b1b1b; color:#fff; text-align:center; padding:40px; }
+            .card { background:#2c2c2c; padding:20px; border-radius:10px; width:300px; margin:auto; }
+            input { width:80%; padding:8px; margin:10px 0; border:none; border-radius:5px; }
+            button { padding:10px 20px; background:#28a745; color:#fff; border:none; border-radius:5px; cursor:pointer; }
+            button:hover { background:#218838; }
+        </style>
+    </head>
+    <body>
+        <h2><img src="templates/img/logo.png" alt="Social-Wars-logo" style="width: 20vw;"></h2>
+        <h2><img src="templates/img/cash.png" alt="cash"> Cash Register API <img src="templates/img/cash.png" alt="cash"></h2>
+        <div class="card">
+            <p id="player" align="left" style="padding-left: 20px;">
+                <img src="templates/img/icon.png" alt="icon" style="width: 20px;">Current Player: ...</p>
+            <p id="cash" align="left" style="padding-left: 20px;">
+                <img src="templates/img/cash.png" alt="cash" style="width: 20px;">Cash: ...</p>
+            <input id="newCash" type="number" placeholder="Enter new cash value">
+            <button onclick="setCash()">Apply</button>
+            <p id="msg"></p>
+        </div>
+
+        <script>
+        async function loadCash() {
+            const res = await fetch('/api/cash');
+            if (!res.ok) return;
+            const data = await res.json();
+            document.getElementById('player').textContent = 'Player: ' + data.player;
+            document.getElementById('cash').textContent = 'Cash: ' + data.cash;
+        }
+
+        async function setCash() {
+            const val = document.getElementById('newCash').value;
+            const res = await fetch('/api/set_cash', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: Number(val) })
+            });
+            const data = await res.json();
+            document.getElementById('msg').textContent = data.message || 'Done.';
+            loadCash();
+        }
+
+        loadCash();
+        </script>
+    </body>
+    </html>

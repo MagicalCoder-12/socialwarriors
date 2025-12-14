@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta -->
+    <meta charset="utf-8"/>
+    <!-- Title and Icon -->
+    <title>Social Wars - Settings</title>
+    <link rel="shortcut icon" href="img/icon.png"/>
+    <link rel="icon" type="image/gif" href="img/icon.png"/>
+    <style>
+        body {
+            font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            border-bottom: 2px solid #669C2C;
+            padding-bottom: 10px;
+        }
+        .setting-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .setting-group h2 {
+            margin-top: 0;
+            color: #669C2C;
+        }
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+        select, input[type="range"] {
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #669C2C;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+        }
+        button:hover {
+            background-color: #5a8a25;
+        }
+        .preview {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #eef;
+            border-radius: 5px;
+        }
+        .info-box {
+            background-color: #fff8dc;
+            border-left: 4px solid #669C2C;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #669C2C;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><img src="img/icon.png" alt="Icon" style="vertical-align: middle; width: 32px;"> Social Wars Settings</h1>
+        
+        <div class="info-box">
+            <h3>Settings Information</h3>
+            <p>Adjust the settings below to customize your gaming experience. Note that certain settings like frame rate and resolution are controlled by the Flash player itself and cannot be modified through this interface.</p>
+        </div>
+        
+        <div class="setting-group">
+            <h2>Audio Settings</h2>
+            
+            <div class="setting-row">
+                <label for="masterVolume">Master Volume:</label>
+                <input type="range" id="masterVolume" min="0" max="100" value="80" onchange="updatePreview()">
+            </div>
+            
+            <div class="setting-row">
+                <label for="musicVolume">Music Volume:</label>
+                <input type="range" id="musicVolume" min="0" max="100" value="70" onchange="updatePreview()">
+            </div>
+            
+            <div class="setting-row">
+                <label for="sfxVolume">Sound Effects:</label>
+                <input type="range" id="sfxVolume" min="0" max="100" value="90" onchange="updatePreview()">
+            </div>
+        </div>
+        
+        <div class="setting-group">
+            <h2>Gameplay Settings</h2>
+            
+            <div class="setting-row">
+                <label for="autoSave">Auto Save:</label>
+                <select id="autoSave" onchange="updatePreview()">
+                    <option value="1">Every 1 minute</option>
+                    <option value="5" selected>Every 5 minutes</option>
+                    <option value="10">Every 10 minutes</option>
+                    <option value="0">Disabled</option>
+                </select>
+            </div>
+            
+            <div class="setting-row">
+                <label for="notifications">Notifications:</label>
+                <select id="notifications" onchange="updatePreview()">
+                    <option value="all">All</option>
+                    <option value="important" selected>Important Only</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+        </div>
+        
+        <button onclick="saveSettings()">Save Settings</button>
+        
+        <div class="preview">
+            <p id="previewText">Settings will be applied when the game is refreshed</p>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            // Simple preview update - in a real implementation, this could show more details
+            document.getElementById('previewText').textContent = "Settings updated. Click 'Save Settings' to apply changes.";
+        }
+        
+        function saveSettings() {
+            // In a real implementation, this would save to localStorage or send to server
+            const settings = {
+                masterVolume: document.getElementById('masterVolume').value,
+                musicVolume: document.getElementById('musicVolume').value,
+                sfxVolume: document.getElementById('sfxVolume').value,
+                autoSave: document.getElementById('autoSave').value,
+                notifications: document.getElementById('notifications').value
+            };
+            
+            // Save to localStorage as an example
+            localStorage.setItem('socialWarsSettings', JSON.stringify(settings));
+            
+            document.getElementById('previewText').textContent = "Settings saved successfully! Refresh the game page for changes to take effect.";
+        }
+        
+        // Load saved settings if they exist
+        window.onload = function() {
+            const savedSettings = localStorage.getItem('socialWarsSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                document.getElementById('masterVolume').value = settings.masterVolume || '80';
+                document.getElementById('musicVolume').value = settings.musicVolume || '70';
+                document.getElementById('sfxVolume').value = settings.sfxVolume || '90';
+                document.getElementById('autoSave').value = settings.autoSave || '5';
+                document.getElementById('notifications').value = settings.notifications || 'important';
+            }
+        };
+    </script>
+</body>
+</html>

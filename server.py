@@ -4,6 +4,10 @@ import json
 import urllib
 import requests
 import io
+import pathlib
+import time
+import shutil
+import threading
 
 if os.name == 'nt':
     os.system("color")
@@ -11,6 +15,87 @@ if os.name == 'nt':
 else:
     import sys
     sys.stdout.write("\x1b]2;Social Wars Server\x07")
+
+# Variables for cash modification functionality
+ROOT_DIR = pathlib.Path(__file__).parent.resolve()
+POSSIBLE_SAVE_DIRS = [
+    ROOT_DIR,  # ✅ Root directory (where save file currently is)
+    ROOT_DIR / "saves",  # also check the /saves/ folder if it exists
+]
+
+BACKUP_DIR = "save_backups"
+os.makedirs(BACKUP_DIR, exist_ok=True)
+
+# Global variable to store currently active save file
+ACTIVE_SAVE = None
+ACTIVE_PLAYER = None
+
+# Keep track of the last detected file
+LAST_DETECTED = None
+CURRENT_CASH = None  # Track last known cash value
+
+def find_latest_save():
+    """Automatically detect and switch to the latest modified save file."""
+    global ACTIVE_SAVE, ACTIVE_PLAYER, LAST_DETECTED, CURRENT_CASH
+
+    latest_path = None
+    latest_name = None
+    latest_cash = None
+    latest_time = 0
+
+    for directory in POSSIBLE_SAVE_DIRS:
+        if not os.path.exists(directory):
+            continue
+        for file in os.listdir(directory):
+            if not file.endswith(".json") and not file.endswith(".save"):
+                continue
+            path = os.path.join(directory, file)
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                player_name = data.get("playerInfo", {}).get("name")
+                player_cash = data.get("playerInfo", {}).get("cash")
+                mod_time = os.path.getmtime(path)
+                if player_name and mod_time > latest_time:
+                    latest_time = mod_time
+                    latest_path = path
+                    latest_name = player_name
+                    latest_cash = player_cash
+            except Exception:
+                continue
+
+    # Switch only if a new save is detected
+    if latest_path and latest_path != LAST_DETECTED:
+        ACTIVE_SAVE = latest_path
+        ACTIVE_PLAYER = latest_name
+        CURRENT_CASH = latest_cash
+        LAST_DETECTED = latest_path
+        print(f"[+] Currently loading:")
+        print(f"[+]{os.path.basename(ACTIVE_SAVE)} (Player: {ACTIVE_PLAYER})")
+        print(f"[+] Current cash: {CURRENT_CASH}")
+
+def backup_save(file_path):
+    """Backup before writing changes."""
+    ts = time.strftime("%Y%m%d-%H%M%S")
+    name = os.path.basename(file_path)
+    shutil.copy2(file_path, os.path.join(BACKUP_DIR, f"{ts}_{name}"))
+
+def read_save(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def write_save(file_path, data):
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+def auto_detect_thread():
+    """Continuously monitor for new saves every few seconds."""
+    while True:
+        find_latest_save()
+        time.sleep(5)
+
+# Start the auto detection thread
+threading.Thread(target=auto_detect_thread, daemon=True).start()
 
 print (" [+] Loading game config...")
 from get_game_config import get_game_config
@@ -29,13 +114,14 @@ load_quests()
 # auction_house = AuctionHouse()
 
 print (" [+] Loading server...")
-from flask import Flask, render_template, send_from_directory, request, redirect, session, send_file
+from flask import Flask, render_template, send_from_directory, request, redirect, session, send_file, jsonify
 from flask.debughelpers import attach_enctype_error_multidict
 from command import command
 from engine import timestamp_now
 from version import version_name
 from bundle import ASSETS_DIR, STUB_DIR, TEMPLATES_DIR, BASE_DIR
 from constants import Quests
+import sessions
 
 host = '127.0.0.1'
 port = 5055
@@ -111,6 +197,67 @@ def avatars(path):
 def css(path):
     return send_from_directory(TEMPLATES_DIR + "/css", path)
 
+# API endpoints for cash modification
+@app.route("/api/status", methods=["GET"])
+def api_status():
+    if not ACTIVE_SAVE:
+        return jsonify({"status": "no_save_found"})
+    return jsonify({"status": "ready", "player": ACTIVE_PLAYER, "path": ACTIVE_SAVE})
+
+@app.route("/api/cash", methods=["GET"])
+def get_cash():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    cash = data.get("playerInfo", {}).get("cash")
+    return jsonify({"player": ACTIVE_PLAYER, "cash": cash})
+
+@app.route("/api/set_cash", methods=["POST"])
+def set_cash():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["playerInfo"]["cash"]
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["playerInfo"]["cash"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+    
+    # Also update the session data to reflect changes in real-time
+    if ACTIVE_PLAYER:
+        user_id = data["playerInfo"]["pid"]
+        # Update the in-memory session data
+        if user_id in sessions.__saves:
+            sessions.__saves[user_id]["playerInfo"]["cash"] = new_amount
+            # Save the session to disk as well to persist changes
+            sessions.save_session(user_id)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_cash": old_amount,
+        "new_cash": new_amount,
+        "message": f"Cash updated successfully for {ACTIVE_PLAYER}. Changes applied in real-time."
+    })
+
+@app.route("/control")
+def control_panel():
+    return render_template("SWCRAPI_test.html")
+
+@app.route('/templates/img/<path:filename>')
+def serve_template_images(filename):
+    return send_from_directory('templates/img', filename)
+
+@app.route('/settings')
+def settings_page():
+    return render_template('settings.html')
+
 ## GAME STATIC
 
 @app.route(__STATIC_ROOT + "/<path:path>")
@@ -165,7 +312,18 @@ def get_player_info_response():
     # Current Player
     if user is None:
         print(f"[PLAYER INFO] USERID {USERID}.")
-        return (get_player_info(USERID), 200)
+        # Get player info from the session
+        player_info = get_player_info(USERID)
+        
+        # Check if we have an active save with updated cash
+        if ACTIVE_SAVE and ACTIVE_PLAYER:
+            save_data = read_save(ACTIVE_SAVE)
+            save_user_id = save_data["playerInfo"]["pid"]
+            if save_user_id == USERID:
+                # Update the cash value in the response with the latest value
+                player_info["playerInfo"]["cash"] = save_data["playerInfo"]["cash"]
+        
+        return (player_info, 200)
     # General Mike
     elif user in ["100000030","100000031"]:
         print(f"[VISIT] USERID {USERID} visiting General Mike ({user}).")
