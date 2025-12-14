@@ -13,7 +13,7 @@ exit
 
 :pyInstaller
 echo [+] Starting pyInstaller...
-pyinstaller --onefile ^
+python -m Pyinstaller --onefile ^
  --console ^
  --add-data "..\..\assets;assets" ^
  --add-data "..\..\stub;stub" ^

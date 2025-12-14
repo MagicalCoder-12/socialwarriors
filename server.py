@@ -9,6 +9,9 @@ import time
 import shutil
 import threading
 
+# Add threading lock for file operations
+file_lock = threading.Lock()
+
 if os.name == 'nt':
     os.system("color")
     os.system("title Social Wars Server")
@@ -81,12 +84,16 @@ def backup_save(file_path):
     shutil.copy2(file_path, os.path.join(BACKUP_DIR, f"{ts}_{name}"))
 
 def read_save(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    """Thread-safe read of save file."""
+    with file_lock:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return json.load(f)
 
 def write_save(file_path, data):
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    """Thread-safe write of save file."""
+    with file_lock:
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
 
 def auto_detect_thread():
     """Continuously monitor for new saves every few seconds."""
@@ -219,27 +226,36 @@ def set_cash():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
-
-    new_amount = int(payload["amount"])
-    data = read_save(ACTIVE_SAVE)
-    old_amount = data["playerInfo"]["cash"]
-
-    # Backup and write
-    backup_save(ACTIVE_SAVE)
-    data["playerInfo"]["cash"] = new_amount
-    write_save(ACTIVE_SAVE, data)
     
-    # Also update the session data to reflect changes in real-time
-    if ACTIVE_PLAYER:
-        user_id = data["playerInfo"]["pid"]
-        # Update the in-memory session data
-        if user_id in sessions.__saves:
-            # Update all player info, not just cash
-            for key, value in data["playerInfo"].items():
-                sessions.__saves[user_id]["playerInfo"][key] = value
-            # Save the session to disk as well to persist changes
-            sessions.save_session(user_id)
-
+    # Validate and convert amount to integer
+    try:
+        new_amount = int(payload["amount"])
+        if new_amount < 0:
+            return jsonify({"error": "Amount must be a positive value"}), 400
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid amount value"}), 400
+    
+    # Use file lock to prevent race conditions
+    with file_lock:
+        data = read_save(ACTIVE_SAVE)
+        old_amount = data["playerInfo"]["cash"]
+        
+        # Backup and write
+        backup_save(ACTIVE_SAVE)
+        data["playerInfo"]["cash"] = new_amount
+        write_save(ACTIVE_SAVE, data)
+        
+        # Also update the session data to reflect changes in real-time
+        if ACTIVE_PLAYER:
+            user_id = data["playerInfo"]["pid"]
+            # Update the in-memory session data
+            if user_id in sessions.__saves:
+                # Update all player info, not just cash
+                for key, value in data["playerInfo"].items():
+                    sessions.__saves[user_id]["playerInfo"][key] = value
+                # Save the session to disk as well to persist changes
+                sessions.save_session(user_id)
+    
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -264,25 +280,34 @@ def set_oil():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
-
-    new_amount = int(payload["amount"])
-    data = read_save(ACTIVE_SAVE)
-    old_amount = data["maps"][0].get("oil", 0)
-
-    # Backup and write
-    backup_save(ACTIVE_SAVE)
-    data["maps"][0]["oil"] = new_amount
-    write_save(ACTIVE_SAVE, data)
     
-    # Also update the session data to reflect changes in real-time
-    if ACTIVE_PLAYER:
-        user_id = data["playerInfo"]["pid"]
-        # Update the in-memory session data
-        if user_id in sessions.__saves:
-            sessions.__saves[user_id]["maps"][0]["oil"] = new_amount
-            # Save the session to disk as well to persist changes
-            sessions.save_session(user_id)
-
+    # Validate and convert amount to integer
+    try:
+        new_amount = int(payload["amount"])
+        if new_amount < 0:
+            return jsonify({"error": "Amount must be a positive value"}), 400
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid amount value"}), 400
+    
+    # Use file lock to prevent race conditions
+    with file_lock:
+        data = read_save(ACTIVE_SAVE)
+        old_amount = data["maps"][0].get("oil", 0)
+        
+        # Backup and write
+        backup_save(ACTIVE_SAVE)
+        data["maps"][0]["oil"] = new_amount
+        write_save(ACTIVE_SAVE, data)
+        
+        # Also update the session data to reflect changes in real-time
+        if ACTIVE_PLAYER:
+            user_id = data["playerInfo"]["pid"]
+            # Update the in-memory session data
+            if user_id in sessions.__saves:
+                sessions.__saves[user_id]["maps"][0]["oil"] = new_amount
+                # Save the session to disk as well to persist changes
+                sessions.save_session(user_id)
+    
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -306,25 +331,34 @@ def set_wood():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
-
-    new_amount = int(payload["amount"])
-    data = read_save(ACTIVE_SAVE)
-    old_amount = data["maps"][0].get("wood", 0)
-
-    # Backup and write
-    backup_save(ACTIVE_SAVE)
-    data["maps"][0]["wood"] = new_amount
-    write_save(ACTIVE_SAVE, data)
     
-    # Also update the session data to reflect changes in real-time
-    if ACTIVE_PLAYER:
-        user_id = data["playerInfo"]["pid"]
-        # Update the in-memory session data
-        if user_id in sessions.__saves:
-            sessions.__saves[user_id]["maps"][0]["wood"] = new_amount
-            # Save the session to disk as well to persist changes
-            sessions.save_session(user_id)
-
+    # Validate and convert amount to integer
+    try:
+        new_amount = int(payload["amount"])
+        if new_amount < 0:
+            return jsonify({"error": "Amount must be a positive value"}), 400
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid amount value"}), 400
+    
+    # Use file lock to prevent race conditions
+    with file_lock:
+        data = read_save(ACTIVE_SAVE)
+        old_amount = data["maps"][0].get("wood", 0)
+        
+        # Backup and write
+        backup_save(ACTIVE_SAVE)
+        data["maps"][0]["wood"] = new_amount
+        write_save(ACTIVE_SAVE, data)
+        
+        # Also update the session data to reflect changes in real-time
+        if ACTIVE_PLAYER:
+            user_id = data["playerInfo"]["pid"]
+            # Update the in-memory session data
+            if user_id in sessions.__saves:
+                sessions.__saves[user_id]["maps"][0]["wood"] = new_amount
+                # Save the session to disk as well to persist changes
+                sessions.save_session(user_id)
+    
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -348,25 +382,34 @@ def set_steel():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
-
-    new_amount = int(payload["amount"])
-    data = read_save(ACTIVE_SAVE)
-    old_amount = data["maps"][0].get("steel", 0)
-
-    # Backup and write
-    backup_save(ACTIVE_SAVE)
-    data["maps"][0]["steel"] = new_amount
-    write_save(ACTIVE_SAVE, data)
     
-    # Also update the session data to reflect changes in real-time
-    if ACTIVE_PLAYER:
-        user_id = data["playerInfo"]["pid"]
-        # Update the in-memory session data
-        if user_id in sessions.__saves:
-            sessions.__saves[user_id]["maps"][0]["steel"] = new_amount
-            # Save the session to disk as well to persist changes
-            sessions.save_session(user_id)
-
+    # Validate and convert amount to integer
+    try:
+        new_amount = int(payload["amount"])
+        if new_amount < 0:
+            return jsonify({"error": "Amount must be a positive value"}), 400
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid amount value"}), 400
+    
+    # Use file lock to prevent race conditions
+    with file_lock:
+        data = read_save(ACTIVE_SAVE)
+        old_amount = data["maps"][0].get("steel", 0)
+        
+        # Backup and write
+        backup_save(ACTIVE_SAVE)
+        data["maps"][0]["steel"] = new_amount
+        write_save(ACTIVE_SAVE, data)
+        
+        # Also update the session data to reflect changes in real-time
+        if ACTIVE_PLAYER:
+            user_id = data["playerInfo"]["pid"]
+            # Update the in-memory session data
+            if user_id in sessions.__saves:
+                sessions.__saves[user_id]["maps"][0]["steel"] = new_amount
+                # Save the session to disk as well to persist changes
+                sessions.save_session(user_id)
+    
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -390,25 +433,34 @@ def set_gold():
     payload = request.get_json()
     if not payload or "amount" not in payload:
         return jsonify({"error": "Missing 'amount' field"}), 400
-
-    new_amount = int(payload["amount"])
-    data = read_save(ACTIVE_SAVE)
-    old_amount = data["maps"][0].get("gold", 0)
-
-    # Backup and write
-    backup_save(ACTIVE_SAVE)
-    data["maps"][0]["gold"] = new_amount
-    write_save(ACTIVE_SAVE, data)
     
-    # Also update the session data to reflect changes in real-time
-    if ACTIVE_PLAYER:
-        user_id = data["playerInfo"]["pid"]
-        # Update the in-memory session data
-        if user_id in sessions.__saves:
-            sessions.__saves[user_id]["maps"][0]["gold"] = new_amount
-            # Save the session to disk as well to persist changes
-            sessions.save_session(user_id)
-
+    # Validate and convert amount to integer
+    try:
+        new_amount = int(payload["amount"])
+        if new_amount < 0:
+            return jsonify({"error": "Amount must be a positive value"}), 400
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid amount value"}), 400
+    
+    # Use file lock to prevent race conditions
+    with file_lock:
+        data = read_save(ACTIVE_SAVE)
+        old_amount = data["maps"][0].get("gold", 0)
+        
+        # Backup and write
+        backup_save(ACTIVE_SAVE)
+        data["maps"][0]["gold"] = new_amount
+        write_save(ACTIVE_SAVE, data)
+        
+        # Also update the session data to reflect changes in real-time
+        if ACTIVE_PLAYER:
+            user_id = data["playerInfo"]["pid"]
+            # Update the in-memory session data
+            if user_id in sessions.__saves:
+                sessions.__saves[user_id]["maps"][0]["gold"] = new_amount
+                # Save the session to disk as well to persist changes
+                sessions.save_session(user_id)
+    
     return jsonify({
         "success": True,
         "player": ACTIVE_PLAYER,
@@ -704,24 +756,26 @@ def skip_chapter_timer():
     if not ACTIVE_SAVE:
         return jsonify({"error": "No active save detected"}), 404
     
-    # Load the current save
-    data = read_save(ACTIVE_SAVE)
-    
-    # Set the last chapter timestamp to 0 to skip the timer
-    data["maps"][0]["timestampLastChapter"] = 0
-    
-    # Backup and write the updated save
-    backup_save(ACTIVE_SAVE)
-    write_save(ACTIVE_SAVE, data)
-    
-    # Also update the session data to reflect changes in real-time
-    if ACTIVE_PLAYER:
-        user_id = data["playerInfo"]["pid"]
-        # Update the in-memory session data
-        if user_id in sessions.__saves:
-            sessions.__saves[user_id]["maps"][0]["timestampLastChapter"] = 0
-            # Save the session to disk as well to persist changes
-            sessions.save_session(user_id)
+    # Use file lock to prevent race conditions
+    with file_lock:
+        # Load the current save
+        data = read_save(ACTIVE_SAVE)
+        
+        # Set the last chapter timestamp to 0 to skip the timer
+        data["maps"][0]["timestampLastChapter"] = 0
+        
+        # Backup and write the updated save
+        backup_save(ACTIVE_SAVE)
+        write_save(ACTIVE_SAVE, data)
+        
+        # Also update the session data to reflect changes in real-time
+        if ACTIVE_PLAYER:
+            user_id = data["playerInfo"]["pid"]
+            # Update the in-memory session data
+            if user_id in sessions.__saves:
+                sessions.__saves[user_id]["maps"][0]["timestampLastChapter"] = 0
+                # Save the session to disk as well to persist changes
+                sessions.save_session(user_id)
     
     return jsonify({
         "success": True,

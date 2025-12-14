@@ -3,22 +3,26 @@ import sys
 import subprocess
 
 # Change to the project directory
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 # Run PyInstaller with the required parameters
 cmd = [
     sys.executable, '-m', 'PyInstaller',
-    '--onefile',
+    '--onedir',
     '--console',
+    '--noupx',
+    '--noconfirm',
+    '--runtime-hook=build/path_bundle.py',
     '--add-data', 'assets;assets',
+    '--add-data', 'config;config',
     '--add-data', 'stub;stub',
     '--add-data', 'templates;templates',
     '--add-data', 'villages;villages',
-    '--add-data', 'config;config',
     '--paths', '.',
-    '--noconfirm',
+    '--workpath', 'build/work',
+    '--distpath', 'build/dist',
+    '--specpath', 'build/bundle',
     '--icon=build/icon.ico',
-    '--noupx',
     '--name', 'social-warriors_0.02a',
     'server.py'
 ]
