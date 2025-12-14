@@ -1,4 +1,6 @@
 {
+	"//": "Unit templates for Social Warriors game modification",
+	"//": "Each template defines default values for a specific unit type",
 	"ROBOT":
 	{
 		"id": "1062",
