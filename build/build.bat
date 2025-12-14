@@ -5,18 +5,37 @@ set NAME=social-warriors_0.02a
 
 :main
 call :pyInstaller
-del /F /Q .\dist\%NAME%\%NAME%.exe.manifest
-del /F /S /Q .\dist\%NAME%\certifi
-rmdir .\dist\%NAME%\certifi
-mkdir .\dist\%NAME%\bundle
-echo.
-echo [MANUAL] Move all files to the bundle folder (except game folders, base_library.zip and python3X.dll).
-pause>NUL
-exit
+
+set TARGET=.\dist\%NAME%
+set BUNDLE=%TARGET%\bundle
+
+echo [+] Creating bundle folder...
+mkdir "%BUNDLE%" 2>NUL
+
+echo [+] Moving runtime folders into bundle...
+for %%D in (
+    assets
+    config
+    templates
+    villages
+    stub
+) do (
+    if exist "%TARGET%\%%D" (
+        echo     -> %%D
+        move "%TARGET%\%%D" "%BUNDLE%" >NUL
+    )
+)
+
+echo [+] Build + bundling finished successfully.
+pause
+exit /b
 
 :pyInstaller
-echo [+] Starting pyInstaller...
-python -m Pyinstaller ^
+echo [+] PyInstaller version:
+pyinstaller --version
+
+echo [+] Starting PyInstaller...
+pyinstaller ^
  --onedir ^
  --console ^
  --noupx ^
@@ -33,6 +52,6 @@ python -m Pyinstaller ^
  --specpath .\bundle ^
  --icon=..\icon.ico ^
  --name %NAME% ..\server.py
-REM --debug bootloader
-echo [+] pyInstaller Done.
-EXIT /B 0
+
+echo [+] PyInstaller Done.
+exit /b 0
