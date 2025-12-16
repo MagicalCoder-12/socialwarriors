@@ -17,4 +17,5 @@ build/work
 .kiro/steering/byterover-rules.md
 .qoder/rules/byterover-rules.md
 .augment/rules/byterover-rules.md
-save_backups
+save_backups/
+.spec
