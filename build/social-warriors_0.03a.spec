@@ -33,6 +33,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=['D:\\programs\\socialwarriors\\build\\icon.ico'],
+    contents_directory='.',
 )
 coll = COLLECT(
     exe,

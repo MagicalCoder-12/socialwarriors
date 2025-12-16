@@ -449,7 +449,11 @@ def do_command(USERID, map_id, cmd, args, resources_changed):
         
         # Only set timestamp if not skipping timers and not already forced
         if not skip_timer and not is_forced:
-            map["timestampLastChapter"] = time_now
+            # Reduce mission failure timer from 4 hours to 1 minute
+            # Instead of setting timestamp to current time, we set it to current time minus 3 hours 59 minutes
+            # This effectively reduces the required wait time from 4 hours to 1 minute
+            adjusted_time = time_now - 14340  # 14340 seconds = 3 hours 59 minutes
+            map["timestampLastChapter"] = adjusted_time
         else:
             # Set timestamp to 0 to skip timer
             map["timestampLastChapter"] = 0
@@ -927,7 +931,10 @@ def do_command(USERID, map_id, cmd, args, resources_changed):
         privateState = save["privateState"]
 
         map["timestamp"] = max(0, map["timestamp"] - seconds)
-        map["timestampLastChapter"] = max(0, map["timestampLastChapter"] - seconds)
+        # Reduce mission failure timer from 4 hours (14400 seconds) to 1 minute (60 seconds)
+        # This is done by accelerating the timestampLastChapter by a factor of 240 (14400/60)
+        adjusted_seconds = seconds * 240 if seconds > 0 else seconds
+        map["timestampLastChapter"] = max(0, map["timestampLastChapter"] - adjusted_seconds)
         map["timestampLastTreasure"] = max(0, map["timestampLastTreasure"] - seconds)
         map["timestampLastTrade"] = max(0, map["timestampLastTrade"] - seconds)
         privateState["timestampLastBonus"] = max(0, privateState["timestampLastBonus"] - seconds)
@@ -958,9 +965,12 @@ def do_command(USERID, map_id, cmd, args, resources_changed):
                     data[6]["ts"] = max(0, data[6]["ts"] - seconds)
 
         # quest times
+        # Reduce harbor mission and other quest timers from 4 hours to 1 minute
+        # This is done by accelerating quest times by a factor of 240 (14400/60)
+        adjusted_quest_seconds = seconds * 240 if seconds > 0 else seconds
         questTimes = map["questTimes"]
         for key in questTimes:
-            questTimes[key] = max(0, questTimes[key] - seconds)
+            questTimes[key] = max(0, questTimes[key] - adjusted_quest_seconds)
 
         print(f"Fast forwarded {seconds} seconds")
 
