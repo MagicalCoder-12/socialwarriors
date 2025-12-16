@@ -1,57 +1,76 @@
 @echo off
-title Builder
+title Social Warriors Build
+setlocal ENABLEEXTENSIONS
 
-set NAME=social-warriors_0.02a
+REM =========================
+REM PROJECT CONFIG
+REM =========================
+set PROJECT_ROOT=D:\programs\socialwarriors
+set BUILD_DIR=%PROJECT_ROOT%\build
+set VENV_PY=%PROJECT_ROOT%\venv\Scripts\python.exe
+set WORK_DIR=%BUILD_DIR%\work
+set DIST_DIR=%BUILD_DIR%\dist
+set NAME=social-warriors_0.03a
 
-:main
-call :pyInstaller
-
-set TARGET=.\dist\%NAME%
-set BUNDLE=%TARGET%\bundle
-
-echo [+] Creating bundle folder...
-mkdir "%BUNDLE%" 2>NUL
-
-echo [+] Moving runtime folders into bundle...
-for %%D in (
-    assets
-    config
-    templates
-    villages
-    stub
-) do (
-    if exist "%TARGET%\%%D" (
-        echo     -> %%D
-        move "%TARGET%\%%D" "%BUNDLE%" >NUL
-    )
+REM =========================
+REM SAFETY CHECK
+REM =========================
+if not exist "%VENV_PY%" (
+    echo [ERROR] Python venv not found:
+    echo %VENV_PY%
+    pause
+    exit /b 1
 )
 
-echo [+] Build + bundling finished successfully.
-pause
-exit /b
+REM =========================
+REM CLEAN PREVIOUS BUILD
+REM =========================
+echo [+] Cleaning old build...
+rmdir /S /Q "%WORK_DIR%" 2>nul
+rmdir /S /Q "%DIST_DIR%" 2>nul
 
-:pyInstaller
-echo [+] PyInstaller version:
-pyinstaller --version
+REM =========================
+REM BUILD EXE
+REM =========================
+echo [+] Building EXE...
 
-echo [+] Starting PyInstaller...
-pyinstaller ^
+"%VENV_PY%" -m PyInstaller ^
  --onedir ^
  --console ^
  --noupx ^
  --noconfirm ^
- --runtime-hook=".\path_bundle.py" ^
- --add-data "..\..\assets;assets" ^
- --add-data "..\..\config;config" ^
- --add-data "..\..\stub;stub" ^
- --add-data "..\..\templates;templates" ^
- --add-data "..\..\villages;villages" ^
- --paths ..\. ^
- --workpath .\work ^
- --distpath .\dist ^
- --specpath .\bundle ^
- --icon=..\icon.ico ^
- --name %NAME% ..\server.py
+ --hidden-import=requests ^
+ --hidden-import=urllib3 ^
+ --hidden-import=certifi ^
+ --hidden-import=jsonpatch ^
+ --hidden-import=jsonpointer ^
+ --add-data "%PROJECT_ROOT%\assets;assets" ^
+ --add-data "%PROJECT_ROOT%\config;config" ^
+ --add-data "%PROJECT_ROOT%\stub;stub" ^
+ --add-data "%PROJECT_ROOT%\templates;templates" ^
+ --add-data "%PROJECT_ROOT%\villages;villages" ^
+ --add-data "%PROJECT_ROOT%\mods;mods" ^
+ --paths "%PROJECT_ROOT%" ^
+ --workpath "%WORK_DIR%" ^
+ --distpath "%DIST_DIR%" ^
+ --specpath "%BUILD_DIR%" ^
+ --icon="%BUILD_DIR%\icon.ico" ^
+ --name %NAME% "%PROJECT_ROOT%\server.py"
 
-echo [+] PyInstaller Done.
-exit /b 0
+if errorlevel 1 (
+    echo.
+    echo [ERROR] Build failed.
+    pause
+    exit /b 1
+)
+
+REM =========================
+REM DONE
+REM =========================
+echo.
+echo =====================================
+echo  BUILD SUCCESS
+echo  EXE LOCATION:
+echo  %DIST_DIR%\%NAME%\%NAME%.exe
+echo =====================================
+pause
