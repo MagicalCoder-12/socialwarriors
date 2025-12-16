@@ -1,5 +1,5 @@
 @echo off
-title Social Warriors Build
+title Social Warriors Build (Flat Layout)
 setlocal ENABLEEXTENSIONS
 
 REM =========================
@@ -23,19 +23,20 @@ if not exist "%VENV_PY%" (
 )
 
 REM =========================
-REM CLEAN PREVIOUS BUILD
+REM CLEAN
 REM =========================
 echo [+] Cleaning old build...
 rmdir /S /Q "%WORK_DIR%" 2>nul
 rmdir /S /Q "%DIST_DIR%" 2>nul
 
 REM =========================
-REM BUILD EXE
+REM BUILD (FLAT ONEDIR)
 REM =========================
-echo [+] Building EXE...
+echo [+] Building EXE (flat layout)...
 
 "%VENV_PY%" -m PyInstaller ^
  --onedir ^
+ --contents-directory . ^
  --console ^
  --noupx ^
  --noconfirm ^
@@ -69,8 +70,7 @@ REM DONE
 REM =========================
 echo.
 echo =====================================
-echo  BUILD SUCCESS
-echo  EXE LOCATION:
-echo  %DIST_DIR%\%NAME%\%NAME%.exe
+echo  BUILD SUCCESS (FLAT STRUCTURE)
+echo  %DIST_DIR%\%NAME%
 echo =====================================
 pause
