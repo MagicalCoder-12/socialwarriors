@@ -2,7 +2,7 @@
 	"playerInfo": {
 		"pid": "Scarlet",
 		"name": "Scarlet",
-		"pic": "https://github.com/AcidCaos/socialwarriors/blob/main/templates/avatars/scarlet.png?raw=true",
+		"pic": "/avatars/scarlet.png",
 		"cash": 42,
 		"completed_tutorial": 1,
 		"default_map": 0,
