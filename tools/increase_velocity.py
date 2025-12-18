@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script to increase all unit velocity values by 7 in the game configuration.
+Script to increase all unit velocity values by 1 in the game configuration.
 """
 
 import json
@@ -34,17 +34,19 @@ def increase_velocity_values():
                 # Get current velocity value
                 current_velocity = int(item["velocity"])
                 
-                # Increase by 7
-                new_velocity = current_velocity + 7
-                
-                # Update the velocity
-                item["velocity"] = str(new_velocity)
-                velocity_updated_count += 1
-                
-                # Print update for units (type "u") with non-zero velocity
-                if item.get("type") == "u" and current_velocity > 0:
-                    print(f"  Updated {item.get('name', 'Unknown')} ({item.get('id')}): {current_velocity} -> {new_velocity}")
+                # Only increase velocity if it's not zero
+                if current_velocity > 0:
+                    # Increase by 1
+                    new_velocity = current_velocity + 1
                     
+                    # Update the velocity
+                    item["velocity"] = str(new_velocity)
+                    velocity_updated_count += 1
+                    
+                    # Print update for units (type "u") with non-zero velocity
+                    if item.get("type") == "u":
+                        print(f"  Updated {item.get('name', 'Unknown')} ({item.get('id')}): {current_velocity} -> {new_velocity}")
+                        
             except ValueError:
                 # Handle case where velocity is not a valid integer
                 print(f"  Warning: Invalid velocity value for item {item.get('id', 'Unknown')}: {item['velocity']}")
