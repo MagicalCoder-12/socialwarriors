@@ -32,7 +32,7 @@
         "attack": "30",
         "defense": "1",
         "life": "40",
-        "velocity": "7",
+        "velocity": "10",
         "attack_range": "3",
         "attack_interval": "35",
         "new_item": "0",
