@@ -1,6 +1,9 @@
 ### Add items at the end of the array ("/items/-")
 atom_fusion_item
 unit_patch
+increase_engineer_healing
+increase_medic_healing
+increase_fireman_healing
 
 ### Order-dependent item modifications. Craft carefully (mindful of the above)
 atom_fusion_items_data
