@@ -140,7 +140,7 @@ def breeding_order_health(a, ar, ai, d, l, v):
     Returns:
         int: Breeding order value
     """
-    return min(int(l/20), 1000)
+    return int(l/5)
 
 def breeding_order_simple2(a, ar, ai, d, l, v):
     """
