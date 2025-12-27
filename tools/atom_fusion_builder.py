@@ -40,14 +40,12 @@ def breeding_order_tier_based(a, ar, ai, d, l, v):
 		breeding_order = int(max(75, min(149, 10 + pow(l / 225, 2) + pow(dps * 5, 0.5))))
 	else: # TIER 1
 		breeding_order = int(max(1, min(74, -4 + pow(l / 200, 2) + pow(dps * 5, 0.5))))
-	sm_training_time = 1000 * breeding_order # in seconds
 	return breeding_order
 
 def breeding_order_health(a, ar, ai, d, l, v):
-	# Calculate breeding order based on life but cap the training time to 12 hours (43200 seconds)
-	# Max breeding order to ensure training time doesn't exceed 12 hours: 43200/2000 = 21.6
-	# Use a square root scaling to reduce the impact of very high life values
-	return min(int(l/50 + math.sqrt(l)), 21)
+	# Calculate breeding order based on life but cap the breeding order to 240
+	# Use division by 20 to scale life appropriately
+	return min(int(l/20), 240)
 
 def breeding_order_simple2(a, ar, ai, d, l, v):
 	print("attack", a, "range", ar, "interval", ai, "defense", d, "life", l, "vel", v)

@@ -124,11 +124,212 @@ def set_cash():
     })
 
 
+@app.route("/api/mana", methods=["GET"])
+def get_mana():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    player_info = data.get("playerInfo", {})
+    
+    # Check if player has the dark matter attribute
+    if "mana" not in player_info:
+        return jsonify({"error": "Player has not unlocked dark matter yet", "player": ACTIVE_PLAYER, "mana": 0}), 200
+    
+    mana = player_info.get("mana", 0)
+    return jsonify({"player": ACTIVE_PLAYER, "mana": mana})
+
+
+@app.route("/api/check_mana_unlocked", methods=["GET"])
+def check_mana_unlocked():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    player_info = data.get("playerInfo", {})
+    
+    # Check if player has the dark matter attribute
+    has_mana = "mana" in player_info
+    return jsonify({"player": ACTIVE_PLAYER, "has_mana": has_mana})
+
+
+@app.route("/api/set_mana", methods=["POST"])
+def set_mana():
+    if not ACTIVE_SAVE:
+        return jsonify({"[x]error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"[x]error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    player_info = data.get("playerInfo", {})
+    
+    # Check if player has the dark matter attribute
+    if "mana" not in player_info:
+        return jsonify({"[x]error": "Player has not unlocked dark matter yet"}), 400
+
+    old_amount = player_info["mana"]
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["playerInfo"]["mana"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_mana": old_amount,
+        "new_mana": new_amount,
+        "message": f"Dark matter updated successfully for {ACTIVE_PLAYER}. Restart the game by logging out to apply changes."
+    })
+
+
+@app.route('/api/oil', methods=['GET'])
+def get_oil():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    oil = data.get('maps', [{}])[0].get('oil', 0)
+    return jsonify({"player": ACTIVE_PLAYER, "oil": oil})
+
+
+@app.route('/api/set_oil', methods=['POST'])
+def set_oil():
+    if not ACTIVE_SAVE:
+        return jsonify({"[x]error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"[x]error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0]["oil"]
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["oil"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_oil": old_amount,
+        "new_oil": new_amount,
+        "message": f"Oil updated successfully for {ACTIVE_PLAYER}. Restart the game by logging out to apply changes."
+    })
+
+
+@app.route('/api/wood', methods=['GET'])
+def get_wood():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    wood = data.get('maps', [{}])[0].get('wood', 0)
+    return jsonify({"player": ACTIVE_PLAYER, "wood": wood})
+
+
+@app.route('/api/set_wood', methods=['POST'])
+def set_wood():
+    if not ACTIVE_SAVE:
+        return jsonify({"[x]error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"[x]error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0]["wood"]
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["wood"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_wood": old_amount,
+        "new_wood": new_amount,
+        "message": f"Wood updated successfully for {ACTIVE_PLAYER}. Restart the game by logging out to apply changes."
+    })
+
+
+@app.route('/api/steel', methods=['GET'])
+def get_steel():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    steel = data.get('maps', [{}])[0].get('steel', 0)
+    return jsonify({"player": ACTIVE_PLAYER, "steel": steel})
+
+
+@app.route('/api/set_steel', methods=['POST'])
+def set_steel():
+    if not ACTIVE_SAVE:
+        return jsonify({"[x]error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"[x]error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0]["steel"]
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["steel"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_steel": old_amount,
+        "new_steel": new_amount,
+        "message": f"Steel updated successfully for {ACTIVE_PLAYER}. Restart the game by logging out to apply changes."
+    })
+
+
+@app.route('/api/gold', methods=['GET'])
+def get_gold():
+    if not ACTIVE_SAVE:
+        return jsonify({"error": "No active save detected"}), 404
+    data = read_save(ACTIVE_SAVE)
+    gold = data.get('maps', [{}])[0].get('gold', 0)
+    return jsonify({"player": ACTIVE_PLAYER, "gold": gold})
+
+
+@app.route('/api/set_gold', methods=['POST'])
+def set_gold():
+    if not ACTIVE_SAVE:
+        return jsonify({"[x]error": "No active save detected"}), 404
+    payload = request.get_json()
+    if not payload or "amount" not in payload:
+        return jsonify({"[x]error": "Missing 'amount' field"}), 400
+
+    new_amount = int(payload["amount"])
+    data = read_save(ACTIVE_SAVE)
+    old_amount = data["maps"][0]["gold"]
+
+    # Backup and write
+    backup_save(ACTIVE_SAVE)
+    data["maps"][0]["gold"] = new_amount
+    write_save(ACTIVE_SAVE, data)
+
+    return jsonify({
+        "success": True,
+        "player": ACTIVE_PLAYER,
+        "old_gold": old_amount,
+        "new_gold": new_amount,
+        "message": f"Gold updated successfully for {ACTIVE_PLAYER}. Restart the game by logging out to apply changes."
+    })
+
+
 def auto_detect_thread():
     """Continuously monitor for new saves every few seconds."""
     while True:
         find_latest_save()
         time.sleep(5)
+
+
 
 @app.route("/control")
 def control_panel():

@@ -47580,7 +47580,7 @@
             0
         ],
         "DEPOT_LIMITS": "{\"g\":[1, 7, 17,27],\"o\":[1, 8,18,28],\"w\":[1, 5,15,25],\"s\":[1, 6,16,26]};",
-        "MANA_PER_PURCHASE": 5,
+        "MANA_PER_PURCHASE": 50,
         "MANA_REWARD_PER_LEVEL": 2,
         "ISLE_ORDER": [
             "100000006",
