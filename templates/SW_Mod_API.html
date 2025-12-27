@@ -348,37 +348,7 @@
             </div>
         </div>
         
-        <!-- Bulk Wall Placement Card -->
-        <div class="resource-card" style="grid-column: span 2;">
-            <div class="resource-header">
-                <div class="resource-icon-container" style="background: linear-gradient(135deg, #8B4513, #A0522D);">
-                    <span class="resource-icon" style="background: #8B4513; border-radius: 50%; width: 30px; height: 30px; display: block;"></span>
-                </div>
-                <h2 class="resource-title">Bulk Wall Placement</h2>
-            </div>
-            <div class="resource-value" style="font-size: 1.2rem; margin: 15px 0;">Place walls in a line</div>
-            <div class="input-group" style="display: flex; flex-direction: column; gap: 15px;">
-                <div style="display: flex; gap: 10px;">
-                    <input type="number" id="startX" class="resource-input" placeholder="Start X" style="width: 100%;">
-                    <input type="number" id="startY" class="resource-input" placeholder="Start Y" style="width: 100%;">
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <input type="number" id="endX" class="resource-input" placeholder="End X" style="width: 100%;">
-                    <input type="number" id="endY" class="resource-input" placeholder="End Y" style="width: 100%;">
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <select id="wallType" class="resource-input" style="width: 100%; padding: 14px;">
-                        <option value="23">Wall I</option>
-                        <option value="24">Wall II</option>
-                        <option value="25">Wall III</option>
-                        <option value="78">Wall IV</option>
-                        <option value="79">Wall V</option>
-                    </select>
-                    <input type="number" id="wallOrientation" class="resource-input" placeholder="Orientation" value="0" style="width: 100%;">
-                </div>
-                <button class="apply-btn" onclick="placeBulkWalls()" style="background: linear-gradient(90deg, #8B4513, #A0522D);">Place Walls</button>
-            </div>
-        </div>
+
         
         <div class="message">
             <p id="msg">Ready to modify resources</p>
@@ -591,47 +561,6 @@
             } else {
                 const data = await res.json();
                 document.getElementById('msg').textContent = data.error || 'Failed to collect mission';
-            }
-        }
-        
-        async function placeBulkWalls() {
-            const startX = document.getElementById('startX').value;
-            const startY = document.getElementById('startY').value;
-            const endX = document.getElementById('endX').value;
-            const endY = document.getElementById('endY').value;
-            const wallType = document.getElementById('wallType').value;
-            const orientation = document.getElementById('wallOrientation').value || 0;
-            
-            if (!startX || !startY || !endX || !endY) {
-                document.getElementById('msg').textContent = 'Please fill in all coordinates';
-                return;
-            }
-            
-            // Check if it's horizontal or vertical placement
-            if (startX != endX && startY != endY) {
-                document.getElementById('msg').textContent = 'Wall placement must be horizontal or vertical (same X or same Y)';
-                return;
-            }
-            
-            const res = await fetch('/api/bulk_place_walls', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    start_x: Number(startX),
-                    start_y: Number(startY),
-                    end_x: Number(endX),
-                    end_y: Number(endY),
-                    wall_item_id: Number(wallType),
-                    orientation: Number(orientation)
-                })
-            });
-            
-            if (res.ok) {
-                const data = await res.json();
-                document.getElementById('msg').textContent = data.message || 'Walls placed successfully';
-            } else {
-                const data = await res.json();
-                document.getElementById('msg').textContent = data.error || 'Failed to place walls';
             }
         }
 
